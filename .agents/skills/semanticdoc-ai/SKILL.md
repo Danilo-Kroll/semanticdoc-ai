@@ -35,7 +35,7 @@ Se não houver capturas, mas houver PBIP/PBIR, prossiga e gere a documentação 
 
 ## Resultado esperado
 
-Crie ou atualize `documentacao.html`, em português brasileiro, junto ao PBIP selecionado. Derive o título do documento do nome ou metadado do projeto, sem usar título fixo. Se o usuário indicar explicitamente outro diretório, use o local indicado. O manual deve explicar a finalidade e a leitura dos indicadores com base nas definições reais encontradas no PBIR e no modelo semântico.
+Crie ou atualize `documentacao.html`, em português brasileiro, junto ao PBIP selecionado. Preserve o título fixo do template e derive o subtítulo do nome e da finalidade do projeto selecionado. Se o usuário indicar explicitamente outro diretório, use o local indicado. O manual deve explicar a finalidade e a leitura dos indicadores com base nas definições reais encontradas no PBIR e no modelo semântico.
 
 O HTML deve ser um arquivo único e autossuficiente:
 
@@ -56,10 +56,11 @@ Use sempre o arquivo canônico [assets/semanticdoc_template.html](assets/semanti
 - Leia o template completo em toda execução antes de gerar ou atualizar o documento.
 - Trate o template como recurso somente leitura durante a execução. Modifique-o apenas quando o usuário pedir explicitamente uma alteração no próprio padrão visual.
 - Preserve seu layout, cores, fontes, identidade visual, CSS, classes estruturais, navegação por abas, responsividade, regras de impressão e JavaScript. Não recrie um estilo equivalente nem use `documentacao.html` anterior como template.
-- Substitua somente o título do documento, o título e subtítulo do cabeçalho, os botões demonstrativos das abas e as seções demonstrativas de página. Todo o restante deve permanecer idêntico.
+- Preserve `<title>` e `<h1>` fixos. Substitua somente o subtítulo do cabeçalho, o marcador de logo opcional e os conteúdos entre os marcadores `SEMANTICDOC:TABS` e `SEMANTICDOC:PAGES`. Todo o restante deve permanecer idêntico.
+- Use o logo somente quando disponibilizado e identificado com segurança. No marcador `<!-- SEMANTICDOC:LOGO -->`, insira uma única imagem `hero-logo` em Base64 com texto alternativo; sem logo, mantenha o marcador sem reservar espaço.
 - Use os componentes e classes existentes no template para títulos de página, indicadores, imagens, `Objetivo`, `Como interpretar` e regras relevantes.
 - Substitua os textos ilustrativos por interpretações comprovadas no PBIP/PBIR e no modelo semântico. O template define apresentação, não regras de negócio.
-- Quando houver captura confiavelmente relacionada, inclua-a em `<div class="visual-image"><img ...></div>` com Data URL Base64 e texto alternativo funcional. Quando não houver captura, omita o elemento `visual-image` inteiro e nunca use `image-placeholder`.
+- Quando houver captura confiavelmente relacionada, inclua-a em `<div class="visual-image"><img ...></div>` como primeiro filho de `visual-content`, seguida de `visual-body`, com Data URL Base64 e texto alternativo funcional. Sem captura, use `visual-content no-image` contendo somente `visual-body` e nunca use `image-placeholder`.
 - Se o template não puder ser lido, não improvise outro padrão visual. Informe apenas que o recurso obrigatório está indisponível e não sobrescreva uma documentação existente.
 
 ### Contrato de geração literal
@@ -68,7 +69,7 @@ O template é o arquivo de origem, não apenas uma referência de estilo. Execut
 
 1. carregue o conteúdo integral de `assets/semanticdoc_template.html`, resolvido a partir da pasta deste `SKILL.md`, em memória antes de produzir qualquer HTML;
 2. confirme que o arquivo contém `<style>`, `<script>`, `header.hero`, `nav.tabs`, páginas demonstrativas e o rodapé;
-3. produza separadamente o título, o subtítulo, os botões de aba e as seções de página;
+3. produza separadamente o subtítulo, o logo opcional, os botões de aba e as seções de página, mantendo os títulos fixos;
 4. crie o candidato a `documentacao.html` exclusivamente substituindo os conteúdos demonstrativos correspondentes no template carregado;
 5. valide o candidato em memória;
 6. grave ou sobrescreva `documentacao.html` somente depois que todas as validações passarem.
@@ -81,7 +82,7 @@ O template é o arquivo de origem, não apenas uma referência de estilo. Execut
 - criar classes visuais novas ou substituir componentes do template por marcação equivalente;
 - modificar o template para acomodar um relatório específico.
 
-O conteúdo gerado deve usar somente estas classes do template: `hero`, `shell`, `eyebrow`, `subtitle`, `tabs`, `tab`, `page`, `active`, `page-intro`, `visual-grid`, `visual`, `wide`, `visual-head`, `visual-image`, `visual-body`, `field`, `rule`, `footer` e `note`. A classe `image-placeholder` pertence apenas à demonstração do template e nunca deve aparecer no documento final.
+O conteúdo gerado deve usar somente estas classes do template: `hero`, `shell`, `hero-layout`, `hero-copy`, `hero-logo`, `eyebrow`, `subtitle`, `tabs`, `tab`, `page`, `active`, `page-intro`, `visual-grid`, `visual`, `visual-head`, `visual-content`, `no-image`, `visual-image`, `visual-body`, `field`, `rule`, `footer` e `note`. Não use `wide`, `image-placeholder` nem variantes que coloquem indicadores lado a lado.
 
 Use estes componentes canônicos:
 
@@ -100,20 +101,24 @@ Use estes componentes canônicos:
   <div class="visual-grid">{visuais}</div>
 </section>
 
-<article class="visual {wide}">
+<article class="visual">
   <div class="visual-head"><h3>{nome do indicador}</h3></div>
-  {visual-image opcional}
-  <div class="visual-body">
-    <div class="field">Objetivo</div>
-    <p>{objetivo}</p>
-    <div class="field">Como interpretar</div>
-    <p>{interpretação}</p>
-    {rule opcional}
+  <div class="visual-content">
+    <div class="visual-image"><img src="data:image/png;base64,{captura}" alt="{descrição funcional}"></div>
+    <div class="visual-body">
+      <div class="field">Objetivo</div>
+      <p>{objetivo}</p>
+      <div class="field">Como interpretar</div>
+      <p>{interpretação}</p>
+      {rule opcional}
+    </div>
   </div>
 </article>
 ```
 
-Use `visual wide` somente quando necessário. Para páginas sem indicadores funcionais, mantenha apenas `page-intro` e omita `visual-grid`; não invente cards.
+Todos os indicadores ocupam uma linha completa, sem exceções por tipo de visual. Sem imagem, omita `visual-image` e acrescente `no-image` a `visual-content` para que o texto ocupe toda a largura. Para páginas sem indicadores funcionais, mantenha apenas `page-intro` e omita `visual-grid`; não invente cards.
+
+Quando Node.js já estiver disponível, use [scripts/render_documentation.cjs](scripts/render_documentation.cjs) para montar e validar o HTML a partir do template. O script recebe via entrada padrão um JSON com `subtitle`, `logo` opcional e `pages`; cada página contém `name`, `objective` e `visuals`, e cada visual contém `name`, `objective`, `interpretation`, `rules` opcional (lista de frases) e `image` opcional. Cada imagem ou logo contém `src` (Data URL Base64) e `alt`. Execute `node <diretório-da-Skill>/scripts/render_documentation.cjs <caminho-de-saída>/documentacao.html`. Mantenha o JSON apenas em memória ou em arquivo temporário removido após a execução. O script não interpreta DAX e não substitui a análise funcional. Se Node.js não estiver disponível, siga o mesmo contrato diretamente com os recursos existentes, sem exigir instalação.
 
 ## Fluxo de trabalho
 
@@ -234,8 +239,12 @@ Requisitos de layout:
 - mantenha a aba ativa visualmente destacada por cor, borda, fundo ou combinação equivalente, sem depender apenas de mudança sutil de tom;
 - use composição compacta, sem painéis de resumo, contadores de páginas, quantidade de visuais ou cards decorativos;
 - adapte cada seção à proporção da imagem e ao tamanho real do texto, evitando alturas fixas e grandes espaços vazios;
-- preserve a proporção das imagens com `max-width: 100%`, altura automática ou `aspect-ratio` correspondente ao recorte;
-- permita grades responsivas para indicadores curtos e largura maior para gráficos extensos;
+- use largura de 95% da janela, limitada a 1600px, alinhando cabeçalho, conteúdo e rodapé com margens laterais reduzidas;
+- use uma única coluna de indicadores em `visual-grid`, separados por 14px; nunca coloque dois indicadores lado a lado;
+- mantenha o nome no topo de cada card e, abaixo, `visual-content` com imagem à esquerda em aproximadamente 35% e descrição à direita em aproximadamente 65%; não mova a descrição para baixo da imagem no desktop;
+- mantenha duas colunas em tablets acima de 640px e empilhe imagem e descrição em telas de até 640px;
+- preserve a proporção original com `width: auto`, `height: auto`, `max-width: 100%`, `max-height: 220px` e `object-fit: contain`; não aplique cortes, altura fixa ou ampliação obrigatória às imagens;
+- use `visual-content no-image` para texto em largura completa quando não houver captura, sem coluna vazia;
 - agrupe visuais semelhantes sob um título comum quando isso reduzir repetição;
 - não inclua a captura inteira da página como introdução se os gráficos já estiverem recortados e presentes;
 - use `@media print` para preservar contraste, evitar cortes dentro de um indicador e remover efeitos desnecessários;
@@ -251,6 +260,11 @@ Incorpore cada imagem utilizada como Data URL Base64. É permitido incorporar a 
 - Compare o bloco `<script>` do candidato com o bloco do template e exija igualdade exata, caractere por caractere.
 - Confirme que existe exatamente um `<style>`, exatamente um `<script>`, nenhum atributo `style` e nenhuma classe fora do contrato do template.
 - Confirme que o cabeçalho, a barra de abas, o contêiner principal e suas posições relativas permanecem iguais aos do template.
+- Confirme que `<title>` e `<h1>` permanecem fixos, o subtítulo identifica o relatório e qualquer logo presente usa Base64 sem criar espaço vazio quando ausente.
+- Confirme que cada `article.visual` contém exatamente um `visual-head` seguido de um `visual-content`, com `visual-image` antes de `visual-body` quando houver imagem. Sem imagem, exija `visual-content no-image` com somente `visual-body`.
+- Confirme que todos os cards ocupam a largura completa; em 1440px e 768px, imagem e descrição devem ficar lado a lado, com a imagem limitada a 220px. Em 390px, a imagem deve ficar acima da descrição sem rolagem horizontal do documento.
+- Verifique que a largura do documento é `min(95% da janela, 1600px)`, o espaçamento entre cards está entre 12px e 16px e a proporção renderizada das imagens coincide com a original.
+- Valide também um indicador sem imagem, conferindo que o texto ocupa toda a largura, e a impressão, conferindo que todas as páginas ocultas aparecem. O script auxiliar valida o contrato estrutural; quando houver navegador disponível, verifique também as dimensões renderizadas.
 - Se qualquer validação do template falhar, descarte o candidato e preserve o `documentacao.html` existente. Não tente corrigir o layout por aproximação.
 - Quando houver imagens, confirme que toda imagem utilizada está incorporada em Base64 válido e que nenhum recorte distorce sua proporção.
 - Procure e remova referências `http://`, `https://`, `file://`, caminhos absolutos, `<link>`, `@import` e qualquer `<script src="...">`. Mantenha somente o script incorporado necessário às abas.

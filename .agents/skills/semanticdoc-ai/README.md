@@ -22,14 +22,21 @@ seu-projeto/
 │       └── semanticdoc-ai/
 │           ├── SKILL.md
 │           ├── README.md
-│           └── assets/
-│               └── semanticdoc_template.html
+│           ├── assets/
+│           │   └── semanticdoc_template.html
+│           └── scripts/
+│               ├── render_documentation.cjs
+│               └── render_documentation.test.cjs
 ├── seu-relatorio.pbip
 ├── pasta-do-relatorio/
 └── pasta-do-modelo/
 ```
 
 A Skill resolve `assets/semanticdoc_template.html` relativamente ao próprio `SKILL.md`. Nenhum caminho absoluto ou configuração na raiz do projeto é necessário.
+
+A pasta `scripts/` inclui `render_documentation.cjs`, um montador e validador opcional para ambientes que já tenham Node.js. Copie a pasta completa da Skill; a execução básica continua sem exigir instalação adicional.
+
+Para verificar o montador em um ambiente com Node.js, execute `node .agents/skills/semanticdoc-ai/scripts/render_documentation.test.cjs` na raiz do projeto.
 
 ## Uso
 
@@ -63,6 +70,8 @@ O manual contém:
 - nome, objetivo e orientação de interpretação para cada visual funcional;
 - regras importantes somente quando comprovadas ou necessárias para evitar leitura incorreta;
 - imagens originais em Base64 quando houver correspondência segura com o visual.
+
+Cada indicador ocupa uma linha completa, com título no topo, imagem à esquerda (35%) e texto à direita (65%). O documento usa 95% da janela até 1600px, e as imagens preservam a proporção com altura máxima de 220px. No celular, a imagem fica acima do texto; sem captura, o texto ocupa toda a largura. O título do manual é fixo, o subtítulo identifica o relatório e o logo é opcional. A impressão inclui todas as páginas.
 
 Na ausência de capturas, os visuais continuam documentados sem imagem e sem espaços vazios. A quantidade e a numeração dos arquivos não determinam a página: a correspondência é validada pelo PBIR, pelos títulos e pela disposição dos visuais. A Skill nunca cria gráficos fictícios.
 
