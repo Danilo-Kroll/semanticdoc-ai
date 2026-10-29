@@ -1,0 +1,14 @@
+**/.pbi/localSettings.json
+**/.pbi/cache.abf
+
+# Distribuir somente a Skill e a pasta opcional de capturas.
+/*
+!/.gitignore
+!/.agents/
+/.agents/*
+!/.agents/skills/
+/.agents/skills/*
+!/.agents/skills/semanticdoc-ai/
+!/imagens/
+/imagens/*
+!/imagens/.gitkeep
