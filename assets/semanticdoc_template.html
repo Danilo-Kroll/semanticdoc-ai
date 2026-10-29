@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SemanticDoc AI | Modelo de documentação funcional</title>
+<style>
+:root{--ink:#24323d;--muted:#5f6f7a;--surface:#fff;--canvas:#f3f6f7;--line:#dbe3e7;--brand:#3e6979;--brand-deep:#294d5b;--brand-soft:#eaf2f4;--accent:#72b84a;--radius:16px}
+*{box-sizing:border-box}body{margin:0;font:15px/1.55 Inter,"Segoe UI",Arial,sans-serif;background:var(--canvas);color:var(--ink)}
+.hero{background:linear-gradient(120deg,var(--brand-deep),#3f7486);color:#fff;padding:30px 24px}.shell{max-width:1120px;margin:auto}.eyebrow{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.14em;color:#d7ebd0}h1{font-size:clamp(24px,3vw,35px);margin:3px 0 5px}h2{margin:0;font-size:21px}h3{margin:0;font-size:17px}.subtitle{margin:0;max-width:780px;color:#e9f1f3}
+main{max-width:1120px;margin:0 auto;padding:24px}.tabs{display:flex;gap:8px;overflow-x:auto;padding:3px 0 12px;position:sticky;top:0;background:var(--canvas);z-index:2}.tab{flex-shrink:0;border:1px solid var(--line);background:#fff;color:var(--brand-deep);border-radius:10px;padding:10px 16px;font:inherit;font-weight:700;cursor:pointer}.tab[aria-selected=true]{background:var(--brand);color:#fff;border-color:var(--brand)}.page{display:none}.page.active{display:block}.page-intro{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:20px 23px;margin-bottom:18px}.page-intro p{margin:7px 0 0;color:var(--muted)}
+.visual-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.visual{background:#fff;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:0 5px 16px #192f3a09;min-width:0}.visual.wide{grid-column:1/-1}.visual-head{padding:16px 18px 10px;border-bottom:1px solid var(--line);border-left:5px solid var(--accent)}.visual-image{padding:12px;background:#eef1f2}.visual-image img{width:100%;height:auto;display:block;object-fit:contain;background:#fff;border-radius:8px}.image-placeholder{min-height:165px;border:2px dashed #b8c8cd;border-radius:9px;background:#f8fafb;display:flex;justify-content:center;align-items:center;text-align:center;color:#67808a;padding:16px;font-size:13px}.visual-body{padding:16px 18px 18px}.visual-body p{margin:4px 0 11px}.visual-body p:last-child{margin-bottom:0}.field{font-size:11px;color:var(--brand);font-weight:800;text-transform:uppercase;letter-spacing:.06em}.rule{background:var(--brand-soft);padding:10px 12px;border-radius:9px;font-size:13px;margin-top:10px}.rule strong{color:var(--brand-deep)}.footer{max-width:1120px;margin:0 auto 25px;padding:0 24px;color:var(--muted);font-size:12px}.note{font-size:12px;color:var(--muted);margin:7px 0 0}
+@media(max-width:730px){.visual-grid{grid-template-columns:1fr}.visual.wide{grid-column:auto}main{padding:14px}.page-intro{padding:17px}.hero{padding:25px 16px}}
+@media print{@page{size:A4;margin:12mm}.hero{background:none;color:#111;border-bottom:2px solid var(--brand);padding:0 0 12px}.eyebrow,.subtitle{color:#333}.tabs{display:none}.page,.page.active{display:block!important;break-before:page}.page:first-of-type{break-before:auto}body{background:#fff}.visual-grid{display:block}.visual{break-inside:avoid;margin-bottom:12px;box-shadow:none}.page-intro{break-inside:avoid}.footer{margin-top:15px}}
+</style>
+</head><body>
+<header class="hero"><div class="shell"><div class="eyebrow">SemanticDoc AI · Manual funcional</div><h1>Relatório de Visitas</h1><p class="subtitle">Entenda para que servem os indicadores e como utilizá-los na análise comercial.</p></div></header>
+<main>
+<nav class="tabs" aria-label="Páginas do relatório" role="tablist">
+ <button class="tab" id="tab-0" role="tab" aria-selected="true" aria-controls="page-0" tabindex="0" data-tab="page-0">Histórico de Visitas</button>
+ <button class="tab" id="tab-1" role="tab" aria-selected="false" aria-controls="page-1" tabindex="-1" data-tab="page-1">Painel de Visitas</button>
+</nav>
+<section class="page active" id="page-0" role="tabpanel" aria-labelledby="tab-0">
+ <div class="page-intro"><h2>Histórico de Visitas</h2><p><strong>Objetivo da página:</strong> acompanhar a evolução das visitas comerciais e consultar os critérios relevantes para sua interpretação.</p></div>
+ <div class="visual-grid">
+  <article class="visual"><div class="visual-head"><h3>Total de Visitas Realizadas</h3></div><div class="visual-image"><div class="image-placeholder">Inserir aqui a imagem original deste visual, incorporada em Base64.</div></div><div class="visual-body"><div class="field">Objetivo</div><p>Acompanhar a quantidade de visitas comerciais registradas nos períodos apresentados.</p><div class="field">Como interpretar</div><p>Use a evolução para analisar a frequência da atividade comercial. A identificação de visitas efetivamente válidas depende das regras de negócio do relatório.</p></div></article>
+  <article class="visual"><div class="visual-head"><h3>Visitas Dentro do Raio</h3></div><div class="visual-image"><div class="image-placeholder">Inserir aqui a imagem original deste visual, incorporada em Base64.</div></div><div class="visual-body"><div class="field">Objetivo</div><p>Acompanhar a aderência das visitas ao critério de localização utilizado pela organização.</p><div class="field">Como interpretar</div><p>Analise a proporção de visitas enquadradas no critério definido. A regra exata de distância e as exclusões devem ser confirmadas na medida correspondente.</p><div class="rule"><strong>A validar:</strong> definição do raio e tratamento das visitas sem localização.</div></div></article>
+ </div>
+</section>
+<section class="page" id="page-1" role="tabpanel" aria-labelledby="tab-1" hidden>
+ <div class="page-intro"><h2>Painel de Visitas</h2><p><strong>Objetivo da página:</strong> apoiar o acompanhamento da atividade comercial e a análise da distribuição das visitas.</p></div>
+ <div class="visual-grid">
+  <article class="visual"><div class="visual-head"><h3>Clientes Visitados</h3></div><div class="visual-image"><div class="image-placeholder">Inserir aqui a imagem original deste visual, incorporada em Base64.</div></div><div class="visual-body"><div class="field">Objetivo</div><p>Indicar a abrangência das visitas em relação à base de clientes.</p><div class="field">Como interpretar</div><p>Utilize o indicador para avaliar quantos clientes receberam visitas, observando se a medida contabiliza clientes distintos ou registros de visita.</p></div></article>
+  <article class="visual"><div class="visual-head"><h3>Visitas por Vendedor</h3></div><div class="visual-image"><div class="image-placeholder">Inserir aqui a imagem original deste visual, incorporada em Base64.</div></div><div class="visual-body"><div class="field">Objetivo</div><p>Permitir a análise da distribuição de visitas entre os vendedores.</p><div class="field">Como interpretar</div><p>Compare a atividade registrada levando em conta diferenças de carteira, período e filtros aplicados. Maior quantidade de visitas não implica, isoladamente, melhor desempenho.</p></div></article>
+ </div>
+</section>
+<p class="note">Este arquivo é um template de referência. Textos ilustrativos devem ser substituídos pela análise do PBIP/PBIR e das medidas; imagens devem vir das capturas reais, nunca de gráficos inventados.</p>
+</main><footer class="footer">SemanticDoc AI · Documentação funcional de relatórios Power BI</footer>
+<script>
+(function(){const tabs=[...document.querySelectorAll('[role=tab]')];const pages=[...document.querySelectorAll('[role=tabpanel]')];function activate(tab){tabs.forEach(t=>{const on=t===tab;t.setAttribute('aria-selected',String(on));t.tabIndex=on?0:-1});pages.forEach(p=>{const on=p.id===tab.dataset.tab;p.hidden=!on;p.classList.toggle('active',on)})}tabs.forEach((tab,i)=>{tab.addEventListener('click',()=>activate(tab));tab.addEventListener('keydown',ev=>{let n;if(ev.key==='ArrowRight')n=(i+1)%tabs.length;else if(ev.key==='ArrowLeft')n=(i+tabs.length-1)%tabs.length;else if(ev.key==='Home')n=0;else if(ev.key==='End')n=tabs.length-1;else return;ev.preventDefault();activate(tabs[n]);tabs[n].focus()})})})();
+</script>
+</body></html>
