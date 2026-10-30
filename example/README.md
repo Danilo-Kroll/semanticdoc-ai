@@ -32,6 +32,6 @@ Os arquivos originais do projeto Power BI não fazem parte desta referência. As
 
 [Consultar o arquivo documentacao.html deste exemplo](documentacao.html)
 
-No GitHub, o link abre a página do arquivo. Para visualizar o manual com seu layout e suas abas, baixe `documentacao.html` e abra-o no navegador. As imagens estão incorporadas em Base64, permitindo a consulta offline sem baixar a pasta `img/`.
+Para visualizar o manual com seu layout e suas abas, baixe `documentacao.html`.
 
 [Voltar ao README principal](../README.md)
