@@ -67,11 +67,13 @@ O manual contém:
 
 - uma aba por página do relatório;
 - objetivo resumido de cada página;
-- nome, objetivo e orientação de interpretação para cada visual funcional;
+- nome e três seções obrigatórias para cada visual funcional: Objetivo, Como é calculado e Como interpretar;
 - regras importantes somente quando comprovadas ou necessárias para evitar leitura incorreta;
 - imagens originais em Base64 quando houver correspondência segura com o visual.
 
 Cada indicador ocupa uma linha completa, com título no topo, imagem à esquerda (35%) e texto à direita (65%). O documento usa 95% da janela até 1600px, e as imagens preservam a proporção com altura máxima de 220px. No celular, a imagem fica acima do texto; sem captura, o texto ocupa toda a largura. O título do manual é fixo, o subtítulo identifica o relatório e o logo é opcional. A impressão inclui todas as páginas.
+
+Em “Como é calculado”, a Skill explica a lógica comprovada das medidas e dos campos em linguagem simples, incluindo filtros e dependências relevantes. Diferencia soma, média, percentual, contagem e contagem distinta, sem publicar DAX. Se o cálculo não puder ser verificado, registra uma limitação breve nessa seção. No montador, essa explicação deve ser informada pelo campo obrigatório `calculation` de cada visual.
 
 Na ausência de capturas, os visuais continuam documentados sem imagem e sem espaços vazios. A quantidade e a numeração dos arquivos não determinam a página: a correspondência é validada pelo PBIR, pelos títulos e pela disposição dos visuais. A Skill nunca cria gráficos fictícios.
 

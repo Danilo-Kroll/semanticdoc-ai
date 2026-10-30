@@ -41,6 +41,7 @@ function imageTag(image, className = '') {
 function renderVisual(visual) {
   const name = escape(requireText(visual.name, 'Nome do indicador'));
   const objective = escape(requireText(visual.objective, 'Objetivo do indicador'));
+  const calculation = escape(requireText(visual.calculation, 'Como é calculado'));
   const interpretation = escape(requireText(visual.interpretation, 'Como interpretar'));
   const rules = visual.rules ?? [];
   if (!Array.isArray(rules)) throw new Error('Regras importantes devem ser uma lista de frases.');
@@ -51,6 +52,7 @@ function renderVisual(visual) {
   return `  <article class="visual"><div class="visual-head"><h3>${name}</h3></div>`
     + `<div class="visual-content${visual.image ? '' : ' no-image'}">${image}`
     + `<div class="visual-body"><div class="field">Objetivo</div><p>${objective}</p>`
+    + `<div class="field">Como é calculado</div><p>${calculation}</p>`
     + `<div class="field">Como interpretar</div><p>${interpretation}</p>${rule}</div></div></article>`;
 }
 
@@ -101,6 +103,13 @@ function validateDocument(html, template = fs.readFileSync(templatePath, 'utf8')
   for (const [, content] of articles) {
     const match = content.match(card);
     if (!match || Boolean(match[1]) === Boolean(match[2])) throw new Error('Estrutura de indicador inválida.');
+    const fields = [...content.matchAll(/<div class="field">([^<]+)<\/div><p>([^<]+)<\/p>/g)];
+    const expected = ['Objetivo', 'Como é calculado', 'Como interpretar'];
+    if (fields.length !== expected.length
+        || (content.match(/class="field"/g) || []).length !== expected.length
+        || fields.some((field, i) => field[1] !== expected[i] || !field[2].trim())) {
+      throw new Error('Cada indicador deve conter Objetivo, Como é calculado e Como interpretar, nessa ordem e com texto.');
+    }
   }
   if ((markup.match(/<article\b/g) || []).length !== articles.length) throw new Error('Card fora do padrão.');
   const tabs = [...markup.matchAll(/<button class="tab" id="tab-(\d+)" role="tab" aria-selected="(true|false)" aria-controls="page-\1" tabindex="(0|-1)" data-tab="page-\1">([^<]+)<\/button>/g)];

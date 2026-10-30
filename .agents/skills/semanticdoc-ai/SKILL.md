@@ -58,7 +58,7 @@ Use sempre o arquivo canônico [assets/semanticdoc_template.html](assets/semanti
 - Preserve seu layout, cores, fontes, identidade visual, CSS, classes estruturais, navegação por abas, responsividade, regras de impressão e JavaScript. Não recrie um estilo equivalente nem use `documentacao.html` anterior como template.
 - Preserve `<title>` e `<h1>` fixos. Substitua somente o subtítulo do cabeçalho, o marcador de logo opcional e os conteúdos entre os marcadores `SEMANTICDOC:TABS` e `SEMANTICDOC:PAGES`. Todo o restante deve permanecer idêntico.
 - Use o logo somente quando disponibilizado e identificado com segurança. No marcador `<!-- SEMANTICDOC:LOGO -->`, insira uma única imagem `hero-logo` em Base64 com texto alternativo; sem logo, mantenha o marcador sem reservar espaço.
-- Use os componentes e classes existentes no template para títulos de página, indicadores, imagens, `Objetivo`, `Como interpretar` e regras relevantes.
+- Use os componentes e classes existentes no template para títulos de página, indicadores, imagens, `Objetivo`, `Como é calculado`, `Como interpretar` e regras relevantes.
 - Substitua os textos ilustrativos por interpretações comprovadas no PBIP/PBIR e no modelo semântico. O template define apresentação, não regras de negócio.
 - Quando houver captura confiavelmente relacionada, inclua-a em `<div class="visual-image"><img ...></div>` como primeiro filho de `visual-content`, seguida de `visual-body`, com Data URL Base64 e texto alternativo funcional. Sem captura, use `visual-content no-image` contendo somente `visual-body` e nunca use `image-placeholder`.
 - Se o template não puder ser lido, não improvise outro padrão visual. Informe apenas que o recurso obrigatório está indisponível e não sobrescreva uma documentação existente.
@@ -108,6 +108,8 @@ Use estes componentes canônicos:
     <div class="visual-body">
       <div class="field">Objetivo</div>
       <p>{objetivo}</p>
+      <div class="field">Como é calculado</div>
+      <p>{lógica de cálculo comprovada ou limitação específica}</p>
       <div class="field">Como interpretar</div>
       <p>{interpretação}</p>
       {rule opcional}
@@ -118,7 +120,7 @@ Use estes componentes canônicos:
 
 Todos os indicadores ocupam uma linha completa, sem exceções por tipo de visual. Sem imagem, omita `visual-image` e acrescente `no-image` a `visual-content` para que o texto ocupe toda a largura. Para páginas sem indicadores funcionais, mantenha apenas `page-intro` e omita `visual-grid`; não invente cards.
 
-Quando Node.js já estiver disponível, use [scripts/render_documentation.cjs](scripts/render_documentation.cjs) para montar e validar o HTML a partir do template. O script recebe via entrada padrão um JSON com `subtitle`, `logo` opcional e `pages`; cada página contém `name`, `objective` e `visuals`, e cada visual contém `name`, `objective`, `interpretation`, `rules` opcional (lista de frases) e `image` opcional. Cada imagem ou logo contém `src` (Data URL Base64) e `alt`. Execute `node <diretório-da-Skill>/scripts/render_documentation.cjs <caminho-de-saída>/documentacao.html`. Mantenha o JSON apenas em memória ou em arquivo temporário removido após a execução. O script não interpreta DAX e não substitui a análise funcional. Se Node.js não estiver disponível, siga o mesmo contrato diretamente com os recursos existentes, sem exigir instalação.
+Quando Node.js já estiver disponível, use [scripts/render_documentation.cjs](scripts/render_documentation.cjs) para montar e validar o HTML a partir do template. O script recebe via entrada padrão um JSON com `subtitle`, `logo` opcional e `pages`; cada página contém `name`, `objective` e `visuals`, e cada visual contém `name`, `objective`, `calculation`, `interpretation`, `rules` opcional (lista de frases) e `image` opcional. O campo obrigatório `calculation` contém a explicação comprovada de como o indicador é calculado ou uma frase curta sobre o cálculo indisponível; não omita o campo quando faltar evidência. Cada imagem ou logo contém `src` (Data URL Base64) e `alt`. Execute `node <diretório-da-Skill>/scripts/render_documentation.cjs <caminho-de-saída>/documentacao.html`. Mantenha o JSON apenas em memória ou em arquivo temporário removido após a execução. O script não interpreta DAX e não substitui a análise funcional. Se Node.js não estiver disponível, siga o mesmo contrato diretamente com os recursos existentes, sem exigir instalação.
 
 ## Fluxo de trabalho
 
@@ -173,7 +175,12 @@ Quando Node.js já estiver disponível, use [scripts/render_documentation.cjs](s
 
 - Aplique obrigatoriamente o **Contrato de geração literal**. Use `assets/semanticdoc_template.html`, resolvido relativamente à pasta deste `SKILL.md`, como arquivo de origem e substitua somente os conteúdos demonstrativos autorizados; nunca redija o documento completo diretamente.
 - Traduza as regras comprovadas no modelo para linguagem de negócio, sem reproduzir DAX, nomes técnicos de tabelas, relacionamentos ou detalhes de implementação.
-- Para cada indicador, escreva `Objetivo` em uma ou duas frases e `Como interpretar` em duas ou três frases. Cada frase deve acrescentar informação específica sobre a finalidade, o contexto, a comparação ou a regra do indicador.
+- Para cada indicador, apresente sempre as três seções nesta ordem: `Objetivo`, `Como é calculado` e `Como interpretar`. Escreva uma ou duas frases em cada seção; use uma terceira frase no cálculo somente quando necessária para explicar uma condição relevante.
+- Em `Objetivo`, explique a finalidade do indicador para o negócio. Em `Como é calculado`, traduza a lógica comprovada das medidas DAX e dos campos usados pelo visual. Em `Como interpretar`, oriente como compreender e utilizar a leitura nas análises, sem repetir o objetivo nem recontar o cálculo.
+- Em `Como é calculado`, diferencie soma, média, contagem de registros, contagem distinta e percentual; quando houver percentual, explique a parte e a base de comparação. Considere os filtros internos, dependências de medidas, agrupamentos, contexto temporal e tratamento de branco ou zero apenas quando comprovados e relevantes.
+- Para visuais sem agregação, como uma lista de obras, explique a seleção e a organização dos registros conforme a configuração do visual, sem inventar uma operação matemática.
+- Quando não for possível verificar o cálculo, mantenha `Como é calculado` com uma frase específica, como `A regra de contagem não pôde ser verificada no modelo disponível.` Se apenas parte da lógica estiver disponível, explique somente a parte comprovada e indique brevemente o critério ausente; nunca deduza regras pelo título ou pela captura.
+- Não reproduza fórmulas DAX, nomes técnicos de tabelas ou valores momentâneos em nenhuma das três seções. Cada frase deve acrescentar informação específica; não copie o mesmo texto entre seções nem repita uma regra de cálculo em `Regras importantes`.
 - Crie `Regras importantes` somente quando houver uma condição comprovada que altere a leitura ou uma dúvida específica que precise de validação. Use poucos itens curtos e omita a seção quando ela não agregar informação.
 - Organize os indicadores por página, na ordem definida pelo relatório, e agrupe indicadores semelhantes quando isso reduzir repetição e melhorar a leitura.
 - Gere uma aba para cada página usando exatamente seu nome original e configure a primeira página do relatório como aba inicial.
@@ -228,10 +235,11 @@ Para cada visual relevante, gere somente:
 1. **Nome do indicador**
 2. **Imagem original do gráfico ou card** — somente quando houver captura correspondente
 3. **Objetivo** — uma ou duas frases sobre a informação de negócio representada e sua finalidade
-4. **Como interpretar** — duas ou três frases sobre significado, contexto, comparação e particularidades comprovadas
-5. **Regras importantes** — seção opcional com apenas as regras essenciais ou a dúvida específica que necessita validação
+4. **Como é calculado** — uma ou duas frases sobre a operação, os critérios e filtros comprovados; use uma terceira frase somente quando necessária ou informe brevemente a limitação quando o cálculo não estiver disponível
+5. **Como interpretar** — uma ou duas frases sobre como compreender e utilizar a leitura, sem repetir a finalidade ou a explicação do cálculo
+6. **Regras importantes** — seção opcional com apenas as regras essenciais ou a dúvida específica que necessita validação, sem duplicar as três seções anteriores
 
-Não crie **Regras importantes** quando o conteúdo apenas repetir `Objetivo` ou `Como interpretar`. Quando faltar evidência, registre uma frase curta e específica, sem alertas longos ou genéricos.
+Não crie **Regras importantes** quando o conteúdo apenas repetir `Objetivo`, `Como é calculado` ou `Como interpretar`. Quando faltar evidência do cálculo, registre uma frase curta e específica na própria seção `Como é calculado`, sem alertas longos ou genéricos.
 
 Requisitos de layout:
 
@@ -272,10 +280,11 @@ Incorpore cada imagem utilizada como Data URL Base64. É permitido incorporar a 
 - Teste o clique e o teclado, verificando que somente um painel fica visível na tela e que `aria-selected`, `tabindex` e `hidden` são atualizados corretamente.
 - Teste a visualização em largura reduzida e confirme que todos os nomes de página continuam acessíveis.
 - Confirme pela folha de impressão ou por inspeção do CSS que todos os painéis são exibidos em `@media print`, mesmo quando ocultos na tela.
-- Confirme que cada visual documentado está na página correta e possui nome, objetivo, orientação de interpretação e imagem quando houver captura correspondente.
+- Confirme que cada visual documentado está na página correta e possui nome, as seções `Objetivo`, `Como é calculado` e `Como interpretar`, exatamente uma vez nessa ordem, e imagem quando houver captura correspondente.
 - Quando não houver captura, confirme que o indicador continua compreensível, que `visual-image` foi omitido e que `image-placeholder` não aparece no documento.
 - Confirme que cada regra funcional pode ser rastreada ao PBIR e ao modelo; quando não puder, registre a limitação sem completar a lógica por suposição.
-- Confirme que cada `Objetivo` contém uma ou duas frases específicas e cada `Como interpretar` contém duas ou três frases úteis.
+- Confirme que cada `Objetivo` e `Como interpretar` contêm uma ou duas frases específicas e distintas. Exija uma explicação curta de cálculo em `Como é calculado`, com filtros e dependências relevantes comprovados ou uma limitação explícita quando indisponível.
+- Revise separadamente soma, média, percentual, contagem e contagem distinta na seção `Como é calculado`. Confirme que nenhuma delas foi inferida apenas pelo nome do visual, que o percentual identifica a base de comparação e que nenhuma fórmula DAX ou explicação duplicada foi publicada.
 - Confirme que `Regras importantes` aparece somente quando necessária e contém apenas condições essenciais ou dúvidas específicas.
 - Remova valores atuais, comparações de resultados, análises de desempenho, explicações óbvias, frases genéricas, inventários técnicos, DAX e seções não permitidas.
 - Revise separadamente quantidade versus percentual, total bruto versus distinto, realizado versus referência e referência versus meta para impedir equivalências não comprovadas.
