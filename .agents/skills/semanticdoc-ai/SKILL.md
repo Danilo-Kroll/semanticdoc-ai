@@ -7,7 +7,7 @@ description: Automatically discovers Power BI PBIP projects in the working direc
 
 Analyze any local Power BI project, its visual context, and its semantic model to help end users understand the purpose and correct interpretation of its indicators. Derive every name, path, page, visual, and rule from the selected project; never carry over assumptions from a previously analyzed report.
 
-These instructions are written in English for reuse across environments. The generated manual remains in Brazilian Portuguese to match the bundled template and renderer. Preserve the literal Portuguese UI labels specified below. The original Portuguese instructions are preserved in [SKILL.pt-BR.md](SKILL.pt-BR.md) as a reference copy; this `SKILL.md` is the active entry point.
+These instructions are written in English for reuse across environments. The generated manual remains in Brazilian Portuguese to match the bundled template and renderer. Preserve the literal Portuguese UI labels specified below. This `SKILL.md` is the active entry point.
 
 ## Portability and dependencies
 
