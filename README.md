@@ -2,11 +2,23 @@
 
 **Geração automatizada de documentação orientada ao negócio para relatórios Power BI utilizando Codex Skills.**
 
-O SemanticDoc AI é uma Skill para o Codex que interpreta projetos Power BI, analisa a estrutura dos visuais e as regras de cálculo e gera um manual funcional em português brasileiro.
+O SemanticDoc AI é uma Skill para o Codex que interpreta projetos Power BI, analisa a estrutura dos visuais e suas regras de cálculo e gera um **manual de indicadores orientado ao negócio**, em português brasileiro.
 
-O objetivo é facilitar a compreensão dos indicadores por usuários de negócio, sem exigir conhecimento técnico de DAX ou do modelo de dados.
+O objetivo é facilitar a compreensão dos indicadores pelos usuários de negócio e preservar o conhecimento sobre suas definições e regras, sem exigir conhecimentos técnicos de DAX ou do modelo de dados.
 
-O resultado é um único arquivo `documentacao.html`, com navegação por páginas, explicações e imagens dos visuais quando houver capturas disponíveis.
+O resultado é um único arquivo `documentacao.html`, com navegação por páginas, explicações em linguagem de negócio e imagens dos visuais, quando houver capturas disponíveis.
+
+## Objetivo do projeto
+
+O SemanticDoc AI foi criado para **preservar e compartilhar o conhecimento de negócio presente nos relatórios Power BI**.
+
+Em muitas organizações, o entendimento sobre o que cada indicador representa, como é calculado e como deve ser interpretado fica concentrado nos profissionais que desenvolveram ou acompanham os relatórios.
+
+Com mudanças de colaboradores, equipes ou responsabilidades, esse conhecimento pode se perder, dificultando a continuidade das análises e a compreensão das informações.
+
+O SemanticDoc AI busca reduzir essa dependência, transformando as definições dos relatórios e modelos semânticos em uma documentação clara, acessível e orientada à área de negócio.
+
+Dessa forma, o conhecimento sobre os indicadores permanece documentado e disponível para consultas, integração de novos colaboradores e continuidade das atividades, independentemente de quem desenvolveu originalmente o relatório.
 
 ## Requisitos
 
@@ -17,9 +29,11 @@ A execução básica não exige a instalação de Python, Node.js, bibliotecas a
 
 ## Instalação
 
-Copie a pasta completa `semanticdoc-ai` para o diretório `.agents/skills/` do seu projeto.
+Clone ou baixe este repositório do GitHub.
 
-A estrutura esperada é:
+Salve seu relatório Power BI no formato PBIP na raiz do projeto, mantendo os arquivos e pastas gerados pelo Power BI Desktop.
+
+A estrutura ficará semelhante a esta:
 
 ```text
 seu-projeto/
@@ -38,17 +52,17 @@ seu-projeto/
 └── pasta-do-modelo/
 ```
 
-O template HTML `assets/` acompanha a Skill, não houvendo a necessidade de configurar caminhos absolutos. Fique a vontade para alterar o layout!
+O template HTML está incluído na pasta `assets/` da Skill, sem necessidade de configurar caminhos absolutos. O layout pode ser personalizado conforme a identidade visual da organização, desde que sejam preservados os componentes necessários à geração da documentação.
 
-A pasta `scripts/` contém um montador e validador opcional para ambientes que já possuem Node.js. Sua utilização não é obrigatória para a execução básica.
+A pasta `scripts/` contém um montador e um validador opcionais para ambientes que já possuem Node.js. Sua utilização não é obrigatória para a execução básica.
 
 ## Como utilizar
 
 ### 1. Prepare o projeto
 
-Abra no Codex a pasta que contém seu projeto Power BI (`.pbip`).
+Abra no Codex a pasta raiz do projeto (seu-projeto/).
 
-Opcionalmente, na pasta `img/` capture as páginas ou dos visuais do relatório.
+Opcionalmente, na pasta `img/` salve as capturas das páginas ou dos visuais do relatório.
 
 Exemplo:
 
@@ -63,7 +77,7 @@ img/
 - `logo.png`: identidade visual opcional para o cabeçalho.
 - `01.png`, `02.png`, `03.png`: capturas utilizadas na documentação.
 
-A numeração é apenas uma referência. A Skill procura relacionar as imagens às páginas e aos visuais utilizando a estrutura do PBIR, os títulos e a disposição dos elementos.
+A numeração dos arquivos é apenas uma referência. A Skill procura relacionar as imagens às páginas e aos visuais utilizando a estrutura do PBIR, os títulos e a disposição dos elementos.
 
 As imagens são opcionais. Na ausência de capturas, os indicadores continuam documentados normalmente, sem espaços reservados para gráficos.
 
@@ -99,9 +113,9 @@ O arquivo é gerado ao lado do PBIP selecionado e pode ser aberto diretamente no
 
 ## Conteúdo da documentação
 
-O SemanticDoc AI gera um manual organizado por páginas, preservando os nomes e a ordem original do relatório Power BI.
+O SemanticDoc AI gera um manual de indicadores organizado por páginas, preservando os nomes e a ordem original do relatório Power BI e apresentando as informações em linguagem acessível às áreas de negócio.
 
-Cada indicador contém três seções principais:
+Cada indicador documentado apresenta três seções principais:
 
 **Objetivo**
 
@@ -166,8 +180,6 @@ Quando o modelo semântico está ausente ou utiliza uma conexão externa, a Skil
 - DAX
 - HTML, CSS e JavaScript
 
-## Objetivo do projeto
+## Licença
 
-O SemanticDoc AI busca aproximar a documentação técnica dos relatórios Power BI das necessidades dos usuários de negócio.
-
-Em vez de apresentar fórmulas e estruturas internas, transforma as definições disponíveis no projeto em explicações funcionais, facilitando a compreensão e a utilização dos indicadores.
+Este projeto é distribuído sob a licença MIT. Consulte o arquivo [LICENSE](LICENSE) para mais informações.
