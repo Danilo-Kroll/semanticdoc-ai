@@ -21,12 +21,12 @@ seu-projeto/
 │   └── skills/
 │       └── semanticdoc-ai/
 │           ├── SKILL.md
-│           ├── README.md
 │           ├── assets/
 │           │   └── semanticdoc_template.html
 │           └── scripts/
 │               ├── render_documentation.cjs
 │               └── render_documentation.test.cjs
+├── README.md
 ├── seu-relatorio.pbip
 ├── pasta-do-relatorio/
 └── pasta-do-modelo/
