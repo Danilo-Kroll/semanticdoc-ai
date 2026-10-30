@@ -76,7 +76,7 @@ img/
 └── 03.png
 ```
 
-- `logo.png`: identidade visual opcional para o cabeçalho.
+- `logo.png`: permite personalizar o cabeçalho da documentação com a identidade visual da sua empresa/projeto. A inclusão é opcional e aceita imagens nos formatos PNG, JPG e JPEG. Salve o arquivo com o nome `logo` e a extensão correspondente.
 - `01.png`, `02.png`, `03.png`: capturas utilizadas na documentação.
 
 A numeração dos arquivos é apenas uma referência. A Skill procura relacionar as imagens às páginas e aos visuais utilizando a estrutura do PBIR, os títulos e a disposição dos elementos.

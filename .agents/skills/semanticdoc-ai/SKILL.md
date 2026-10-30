@@ -1,300 +1,302 @@
 ---
 name: semanticdoc-ai
-description: Descobre projetos Power BI PBIP no diretório de trabalho, interpreta páginas e visuais PBIR com apoio do modelo TMDL ou model.bim e gera um manual funcional HTML offline pelo template incluído. Use com $semanticdoc-ai para documentar qualquer relatório sem serviços externos, valores momentâneos ou alteração do projeto.
+description: Automatically discovers Power BI PBIP projects in the working directory, interprets PBIR pages and visuals using the TMDL or model.bim semantic model, and generates an offline functional HTML manual from the bundled template. Use with $semanticdoc-ai to document any report without additional external services, current chart values, or changes to the project.
 ---
 
 # SemanticDoc AI
 
-Analise qualquer projeto Power BI local, seu contexto visual e o modelo semântico para ensinar o usuário final a compreender a finalidade e a leitura correta dos indicadores. Derive todo nome, caminho, página, visual e regra do projeto selecionado; nunca incorpore suposições de um relatório usado anteriormente.
+Analyze any local Power BI project, its visual context, and its semantic model to help end users understand the purpose and correct interpretation of its indicators. Derive every name, path, page, visual, and rule from the selected project; never carry over assumptions from a previously analyzed report.
 
-## Portabilidade e dependências
+These instructions are written in English for reuse across environments. The generated manual remains in Brazilian Portuguese to match the bundled template and renderer. Preserve the literal Portuguese UI labels specified below. The original Portuguese instructions are preserved in [SKILL.pt-BR.md](SKILL.pt-BR.md) as a reference copy; this `SKILL.md` is the active entry point.
 
-- Considere como raiz de trabalho o diretório aberto pelo usuário, ou o diretório explicitamente indicado na chamada. Não procure fora dessa raiz.
-- Resolva caminhos do projeto relativamente ao arquivo `*.pbip` e caminhos de recursos da Skill relativamente à pasta que contém este `SKILL.md`.
-- Não codifique caminhos absolutos, nomes de usuários, unidades de disco, nomes de relatórios, páginas, medidas, tabelas, campos ou temas de negócio.
-- Use apenas recursos já disponíveis no ambiente do Codex e arquivos locais. A execução básica não pode solicitar instalação de Python, Node.js, bibliotecas, Power BI Desktop, Microsoft Fabric, gateways ou conversores.
-- Não exija Power BI Service, Fabric, tokens, APIs, autenticação, licenças adicionais ou serviços pagos. Não envie o projeto nem seus dados para serviços externos.
-- Use como padrão visual canônico `assets/semanticdoc_template.html`, resolvido relativamente à pasta que contém este `SKILL.md`. A instalação da Skill deve ser autossuficiente e não pode depender de um template localizado na raiz do projeto Power BI.
+## Portability and dependencies
 
-## Acionamento automático
+- Treat the directory opened by the user, or the directory explicitly provided in the invocation, as the working root. Do not search outside that root.
+- Resolve project paths relative to the `*.pbip` file and Skill resource paths relative to the directory containing this `SKILL.md`.
+- Do not hardcode absolute paths, usernames, drive letters, report names, pages, measures, tables, fields, or business domains.
+- Use only resources already available in the Codex environment and local files. Basic execution must not request installation of Python, Node.js, libraries, Power BI Desktop, Microsoft Fabric, gateways, or converters.
+- Do not require Power BI Service, Fabric, tokens, APIs, authentication, additional licenses, or paid services. Do not send the project or its data to external services.
+- Use `assets/semanticdoc_template.html` as the canonical visual template, resolved relative to the directory containing this `SKILL.md`. The Skill installation must be self-contained and must not depend on a template located at the root of a Power BI project.
 
-A mensagem contendo somente `$semanticdoc-ai` é uma solicitação completa. Um caminho opcional para um `*.pbip` apenas seleciona diretamente o projeto. Ao receber a chamada:
+## Automatic invocation
 
-- inicie o processo imediatamente, sem pedir objetivo, contexto, confirmação ou instruções adicionais;
-- descubra arquivos `*.pbip` dentro da raiz de trabalho, ignorando a pasta da própria Skill, `.git`, diretórios de dependências, caches e saídas geradas;
-- se um caminho válido tiver sido indicado, use esse projeto;
-- se houver exatamente um PBIP, selecione-o automaticamente;
-- se houver mais de um PBIP, não gere nem sobrescreva `documentacao.html`: apresente somente os caminhos relativos encontrados e peça ao usuário que escolha um projeto;
-- se não houver PBIP, aceite uma única pasta de relatório que contenha `definition.pbir`; se houver nenhuma ou várias candidatas, peça apenas que o usuário disponibilize ou escolha o projeto;
-- relacione páginas, visuais, campos, medidas, filtros e imagens antes de redigir o conteúdo;
-- leia integralmente `assets/semanticdoc_template.html`, a partir da pasta deste `SKILL.md`, e use-o como base obrigatória da saída;
-- gere apenas `documentacao.html` no diretório do PBIP selecionado, salvo quando o usuário indicar explicitamente outro diretório de saída;
-- informe ao usuário o caminho do arquivo gerado.
+A message containing only `$semanticdoc-ai` is a complete request. An optional path to a `*.pbip` file simply selects the project directly. Upon invocation:
 
-Se não houver capturas, mas houver PBIP/PBIR, prossiga e gere a documentação sem imagens. Imagens isoladas não substituem o projeto para esta execução universal: sem uma definição de relatório identificável, não crie arquivo vazio e peça apenas que o usuário disponibilize o projeto Power BI.
+- start immediately without asking for an objective, context, confirmation, or additional instructions;
+- discover `*.pbip` files inside the working root, excluding the Skill's own directory, `.git`, dependency directories, caches, and generated outputs;
+- if a valid path was provided, use that project;
+- if exactly one PBIP exists, select it automatically;
+- if more than one PBIP exists, do not generate or overwrite `documentacao.html`: list only the relative paths found and ask the user to select a project;
+- if no PBIP exists, accept a single report directory containing `definition.pbir`; if there are no candidates or multiple candidates, ask only for the user to provide or select the project;
+- map pages, visuals, fields, measures, filters, and images before writing the content;
+- read the entire `assets/semanticdoc_template.html`, relative to the directory containing this `SKILL.md`, and use it as the mandatory output source;
+- generate only `documentacao.html` in the selected PBIP's directory unless the user explicitly requests another output directory;
+- tell the user the generated file's path.
 
-## Resultado esperado
+If screenshots are unavailable but PBIP/PBIR exists, proceed and generate documentation without images. Images alone do not replace the project for this universal workflow: without an identifiable report definition, do not create an empty file; ask only for the user to provide the Power BI project.
 
-Crie ou atualize `documentacao.html`, em português brasileiro, junto ao PBIP selecionado. Preserve o título fixo do template e derive o subtítulo do nome e da finalidade do projeto selecionado. Se o usuário indicar explicitamente outro diretório, use o local indicado. O manual deve explicar a finalidade e a leitura dos indicadores com base nas definições reais encontradas no PBIR e no modelo semântico.
+## Expected output
 
-O HTML deve ser um arquivo único e autossuficiente:
+Create or update `documentacao.html` in Brazilian Portuguese alongside the selected PBIP. Preserve the template's fixed title and derive the subtitle from the selected project's name and purpose. If the user explicitly specifies another directory, use that location. The manual must explain the purpose and interpretation of the indicators using the actual definitions found in PBIR and the semantic model.
 
-- quando houver capturas, incorpore todas as imagens usadas com Data URLs no formato `data:image/<tipo>;base64,<conteúdo>`;
-- coloque todo o CSS dentro de um elemento `<style>`;
-- não use caminhos locais ou externos, URLs remotas, fontes externas, folhas de estilo ou scripts externos;
-- coloque todo o JavaScript necessário dentro de um elemento `<script>` no próprio HTML;
-- não gere Markdown, imagens recortadas permanentes, arquivos CSS, arquivos JavaScript ou qualquer outro arquivo no projeto;
-- preserve os arquivos de imagem de origem;
-- não produza arquivos de inventário, mapas de dependência ou relatórios técnicos auxiliares.
+The HTML must be a single, self-contained file:
 
-Não modifique o relatório Power BI original nem qualquer arquivo que o componha. Operações permitidas no projeto são leitura e criação ou atualização de `documentacao.html`.
+- when screenshots are available, embed every image used as a Data URL in the format `data:image/<type>;base64,<content>`;
+- place all CSS inside a `<style>` element;
+- do not use local or external paths, remote URLs, external fonts, stylesheets, or external scripts;
+- place all required JavaScript inside a `<script>` element in the HTML itself;
+- do not generate Markdown, permanent cropped images, CSS files, JavaScript files, or any other project files;
+- preserve the source image files;
+- do not create inventories, dependency maps, or auxiliary technical reports.
 
-## Template visual obrigatório
+Do not modify the original Power BI report or any files that belong to it. The only permitted project operations are reading files and creating or updating `documentacao.html`.
 
-Use sempre o arquivo canônico [assets/semanticdoc_template.html](assets/semanticdoc_template.html), localizado dentro da própria pasta da Skill, como fonte visual única de `documentacao.html`. Resolva esse caminho a partir do diretório que contém `SKILL.md`, independentemente do diretório de trabalho ou da localização do projeto PBIP.
+## Mandatory visual template
 
-- Leia o template completo em toda execução antes de gerar ou atualizar o documento.
-- Trate o template como recurso somente leitura durante a execução. Modifique-o apenas quando o usuário pedir explicitamente uma alteração no próprio padrão visual.
-- Preserve seu layout, cores, fontes, identidade visual, CSS, classes estruturais, navegação por abas, responsividade, regras de impressão e JavaScript. Não recrie um estilo equivalente nem use `documentacao.html` anterior como template.
-- Preserve `<title>` e `<h1>` fixos. Substitua somente o subtítulo do cabeçalho, o marcador de logo opcional e os conteúdos entre os marcadores `SEMANTICDOC:TABS` e `SEMANTICDOC:PAGES`. Todo o restante deve permanecer idêntico.
-- Use o logo somente quando disponibilizado e identificado com segurança. No marcador `<!-- SEMANTICDOC:LOGO -->`, insira uma única imagem `hero-logo` em Base64 com texto alternativo; sem logo, mantenha o marcador sem reservar espaço.
-- Use os componentes e classes existentes no template para títulos de página, indicadores, imagens, `Objetivo`, `Como é calculado`, `Como interpretar` e regras relevantes.
-- Substitua os textos ilustrativos por interpretações comprovadas no PBIP/PBIR e no modelo semântico. O template define apresentação, não regras de negócio.
-- Quando houver captura confiavelmente relacionada, inclua-a em `<div class="visual-image"><img ...></div>` como primeiro filho de `visual-content`, seguida de `visual-body`, com Data URL Base64 e texto alternativo funcional. Sem captura, use `visual-content no-image` contendo somente `visual-body` e nunca use `image-placeholder`.
-- Se o template não puder ser lido, não improvise outro padrão visual. Informe apenas que o recurso obrigatório está indisponível e não sobrescreva uma documentação existente.
+Always use the canonical file [assets/semanticdoc_template.html](assets/semanticdoc_template.html), bundled inside the Skill directory, as the sole visual source for `documentacao.html`. Resolve this path from the directory containing `SKILL.md`, regardless of the working directory or the PBIP project's location.
 
-### Contrato de geração literal
+- Read the complete template on every execution before generating or updating the document.
+- Treat the template as read-only during execution. Modify it only when the user explicitly requests a change to the visual standard itself.
+- Preserve its layout, colors, fonts, visual identity, CSS, structural classes, tab navigation, responsiveness, print rules, and JavaScript. Do not recreate an equivalent style or use a previous `documentacao.html` as a template.
+- Keep `<title>` and `<h1>` fixed. Replace only the header subtitle, the optional logo marker, and the content between the `SEMANTICDOC:TABS` and `SEMANTICDOC:PAGES` markers. Everything else must remain identical.
+- Use a logo only when it has been provided and reliably identified. At `<!-- SEMANTICDOC:LOGO -->`, insert a single Base64 `hero-logo` image with alternative text; without a logo, keep the marker without reserving space.
+- Use the template's existing components and classes for page titles, indicators, images, `Objetivo`, `Como é calculado`, `Como interpretar`, and relevant rules.
+- Replace illustrative text with explanations supported by PBIP/PBIR and the semantic model. The template defines presentation, not business rules.
+- When a screenshot is reliably matched, place it in `<div class="visual-image"><img ...></div>` as the first child of `visual-content`, followed by `visual-body`, with a Base64 Data URL and functional alternative text. Without a screenshot, use `visual-content no-image` containing only `visual-body`; never use `image-placeholder`.
+- If the template cannot be read, do not improvise another visual standard. State only that the required resource is unavailable and do not overwrite existing documentation.
 
-O template é o arquivo de origem, não apenas uma referência de estilo. Execute a montagem nesta ordem:
+### Literal generation contract
 
-1. carregue o conteúdo integral de `assets/semanticdoc_template.html`, resolvido a partir da pasta deste `SKILL.md`, em memória antes de produzir qualquer HTML;
-2. confirme que o arquivo contém `<style>`, `<script>`, `header.hero`, `nav.tabs`, páginas demonstrativas e o rodapé;
-3. produza separadamente o subtítulo, o logo opcional, os botões de aba e as seções de página, mantendo os títulos fixos;
-4. crie o candidato a `documentacao.html` exclusivamente substituindo os conteúdos demonstrativos correspondentes no template carregado;
-5. valide o candidato em memória;
-6. grave ou sobrescreva `documentacao.html` somente depois que todas as validações passarem.
+The template is the source file, not merely a style reference. Assemble the document in this order:
 
-É proibido:
+1. load the complete `assets/semanticdoc_template.html`, resolved from the directory containing this `SKILL.md`, into memory before producing any HTML;
+2. confirm that it contains `<style>`, `<script>`, `header.hero`, `nav.tabs`, demonstration pages, and the footer;
+3. prepare the subtitle, optional logo, tab buttons, and page sections separately, keeping the titles fixed;
+4. create the candidate `documentacao.html` exclusively by replacing the corresponding demonstration content in the loaded template;
+5. validate the candidate in memory;
+6. write or overwrite `documentacao.html` only after all validations pass.
 
-- começar por um HTML vazio, reescrever o esqueleto do documento ou copiar a documentação anterior;
-- alterar, reordenar, reformatar ou regenerar qualquer trecho fora das áreas demonstrativas substituídas;
-- acrescentar outro `<style>`, outro `<script>`, atributos `style`, bibliotecas, folhas de estilo ou scripts;
-- criar classes visuais novas ou substituir componentes do template por marcação equivalente;
-- modificar o template para acomodar um relatório específico.
+The following are prohibited:
 
-O conteúdo gerado deve usar somente estas classes do template: `hero`, `shell`, `hero-layout`, `hero-copy`, `hero-logo`, `eyebrow`, `subtitle`, `tabs`, `tab`, `page`, `active`, `page-intro`, `visual-grid`, `visual`, `visual-head`, `visual-content`, `no-image`, `visual-image`, `visual-body`, `field`, `rule`, `footer` e `note`. Não use `wide`, `image-placeholder` nem variantes que coloquem indicadores lado a lado.
+- starting from an empty HTML document, rewriting the document skeleton, or copying previous documentation;
+- changing, reordering, reformatting, or regenerating anything outside the replaced demonstration areas;
+- adding another `<style>`, another `<script>`, `style` attributes, libraries, stylesheets, or scripts;
+- creating new visual classes or replacing template components with equivalent markup;
+- modifying the template to accommodate a particular report.
 
-Use estes componentes canônicos:
+Generated content may use only these template classes: `hero`, `shell`, `hero-layout`, `hero-copy`, `hero-logo`, `eyebrow`, `subtitle`, `tabs`, `tab`, `page`, `active`, `page-intro`, `visual-grid`, `visual`, `visual-head`, `visual-content`, `no-image`, `visual-image`, `visual-body`, `field`, `rule`, `footer`, and `note`. Do not use `wide`, `image-placeholder`, or variants that place indicators side by side.
+
+Use these canonical components. Placeholder descriptions are in English; the literal UI labels remain in Portuguese:
 
 ```html
 <button class="tab" id="tab-{id}" role="tab" aria-selected="{true|false}"
   aria-controls="page-{id}" tabindex="{0|-1}" data-tab="page-{id}">
-  {nome original da página}
+  {original page name}
 </button>
 
 <section class="page {active}" id="page-{id}" role="tabpanel"
   aria-labelledby="tab-{id}" {hidden}>
   <div class="page-intro">
-    <h2>{nome original da página}</h2>
-    <p><strong>Objetivo da página:</strong> {objetivo}</p>
+    <h2>{original page name}</h2>
+    <p><strong>Objetivo da página:</strong> {page objective}</p>
   </div>
-  <div class="visual-grid">{visuais}</div>
+  <div class="visual-grid">{visuals}</div>
 </section>
 
 <article class="visual">
-  <div class="visual-head"><h3>{nome do indicador}</h3></div>
+  <div class="visual-head"><h3>{indicator name}</h3></div>
   <div class="visual-content">
-    <div class="visual-image"><img src="data:image/png;base64,{captura}" alt="{descrição funcional}"></div>
+    <div class="visual-image"><img src="data:image/png;base64,{screenshot}" alt="{functional description}"></div>
     <div class="visual-body">
       <div class="field">Objetivo</div>
-      <p>{objetivo}</p>
+      <p>{objective}</p>
       <div class="field">Como é calculado</div>
-      <p>{lógica de cálculo comprovada ou limitação específica}</p>
+      <p>{verified calculation logic or specific limitation}</p>
       <div class="field">Como interpretar</div>
-      <p>{interpretação}</p>
-      {rule opcional}
+      <p>{interpretation}</p>
+      {optional rule}
     </div>
   </div>
 </article>
 ```
 
-Todos os indicadores ocupam uma linha completa, sem exceções por tipo de visual. Sem imagem, omita `visual-image` e acrescente `no-image` a `visual-content` para que o texto ocupe toda a largura. Para páginas sem indicadores funcionais, mantenha apenas `page-intro` e omita `visual-grid`; não invente cards.
+Every indicator occupies a full-width row, with no exceptions based on visual type. Without an image, omit `visual-image` and add `no-image` to `visual-content` so the text uses the full width. For pages without functional indicators, keep only `page-intro` and omit `visual-grid`; do not invent cards.
 
-Quando Node.js já estiver disponível, use [scripts/render_documentation.cjs](scripts/render_documentation.cjs) para montar e validar o HTML a partir do template. O script recebe via entrada padrão um JSON com `subtitle`, `logo` opcional e `pages`; cada página contém `name`, `objective` e `visuals`, e cada visual contém `name`, `objective`, `calculation`, `interpretation`, `rules` opcional (lista de frases) e `image` opcional. O campo obrigatório `calculation` contém a explicação comprovada de como o indicador é calculado ou uma frase curta sobre o cálculo indisponível; não omita o campo quando faltar evidência. Cada imagem ou logo contém `src` (Data URL Base64) e `alt`. Execute `node <diretório-da-Skill>/scripts/render_documentation.cjs <caminho-de-saída>/documentacao.html`. Mantenha o JSON apenas em memória ou em arquivo temporário removido após a execução. O script não interpreta DAX e não substitui a análise funcional. Se Node.js não estiver disponível, siga o mesmo contrato diretamente com os recursos existentes, sem exigir instalação.
+When Node.js is already available, use [scripts/render_documentation.cjs](scripts/render_documentation.cjs) to assemble and validate the HTML from the template. The script accepts JSON on standard input with `subtitle`, optional `logo`, and `pages`; each page contains `name`, `objective`, and `visuals`, and each visual contains `name`, `objective`, `calculation`, `interpretation`, optional `rules` (a list of sentences), and optional `image`. The required `calculation` field contains the verified calculation explanation or a short statement that the calculation is unavailable; do not omit the field when evidence is missing. Each image or logo contains `src` (a Base64 Data URL) and `alt`. Run `node <skill-directory>/scripts/render_documentation.cjs <output-directory>/documentacao.html`. Keep the JSON only in memory or in a temporary file removed after execution. The script does not interpret DAX and does not replace functional analysis. If Node.js is unavailable, follow the same contract directly using existing resources, without requesting installation.
 
-## Fluxo de trabalho
+## Workflow
 
-### 1. Descobrir o projeto e as capturas
+### 1. Discover the project and screenshots
 
-- Aplique primeiro a seleção determinística definida em **Acionamento automático**. Não escolha arbitrariamente entre vários PBIPs.
-- Leia o PBIP selecionado como manifesto e resolva cada caminho de artefato a partir do diretório desse arquivo. Não presuma nomes como `Report`, `SemanticModel` ou qualquer prefixo específico.
-- Dentro dos artefatos referenciados, procure `definition.pbir`, `*.tmdl`, `model.bim` e, para formatos legados, `report.json`.
-- A partir do diretório do PBIP selecionado, procure primeiro nas pastas opcionais `img/`, `images/`, `screenshots/` e `capturas/`, nessa ordem. Se nenhuma delas existir ou contiver capturas utilizáveis, procure arquivos PNG, JPG, JPEG, WEBP, BMP, GIF, TIF ou TIFF nas demais pastas do projeto.
-- Não exija pasta de imagens nem quantidade mínima de arquivos. Na ausência de capturas, prossiga normalmente com a documentação textual e omita os componentes de imagem.
-- Não associe arquivos a páginas apenas por nome, numeração ou ordem. Valide cada correspondência usando o PBIR, o nome visível da página, títulos, dimensões, posições e composição dos visuais; trate nomes e numeração somente como indícios auxiliares.
-- Considere somente capturas de páginas ou visuais. Ignore logotipos, ícones, planos de fundo, capas, pôsteres e outros recursos decorativos ou internos do relatório, salvo quando fizerem parte inseparável de uma captura real fornecida pelo usuário.
-- Exclua da descoberta o próprio `documentacao.html` e todo o diretório que contém este `SKILL.md`, inclusive `assets/`, `scripts/`, `references/` ou outros recursos da instalação da Skill. Não mova, renomeie nem modifique as imagens encontradas.
+- First apply the deterministic selection process defined in **Automatic invocation**. Do not choose arbitrarily between multiple PBIPs.
+- Read the selected PBIP as a manifest and resolve each artifact path from its directory. Do not assume names such as `Report`, `SemanticModel`, or a particular prefix.
+- Within the referenced artifacts, look for `definition.pbir`, `*.tmdl`, `model.bim`, and, for legacy formats, `report.json`.
+- Starting from the selected PBIP's directory, search the optional `img/`, `images/`, `screenshots/`, and `capturas/` directories first, in that order. If none exists or contains usable screenshots, search for PNG, JPG, JPEG, WEBP, BMP, GIF, TIF, or TIFF files in the project's remaining directories.
+- Do not require an image directory or a minimum number of files. Without screenshots, proceed normally with textual documentation and omit image components.
+- Do not map files to pages solely by filename, numbering, or order. Validate each match using PBIR, the visible page name, titles, dimensions, positions, and visual composition; treat filenames and numbering only as supporting clues.
+- Consider only page or visual screenshots. Ignore logos, icons, backgrounds, covers, posters, and other decorative or internal report resources unless they are an inseparable part of an actual screenshot supplied by the user.
+- Exclude `documentacao.html` itself and the entire directory containing this `SKILL.md`, including `assets/`, `scripts/`, `references/`, and any other installed Skill resources. Do not move, rename, or modify discovered images.
 
-### 2. Ler a definição do relatório
+### 2. Read the report definition
 
-- Use as referências do PBIP para localizar o artefato de relatório. Não associe pastas por semelhança de nome quando o manifesto fornecer um caminho explícito.
-- Leia `definition.pbir` para determinar a referência do modelo semântico.
-- Quando houver `datasetReference.byPath`, resolva o caminho relativo e procure o modelo local correspondente.
-- Quando houver apenas `datasetReference.byConnection`, ou quando o caminho local não existir, trate o modelo como externo ou ausente. Registre uma única nota curta informando que a lógica não foi verificada e, em cada indicador afetado, mencione somente a regra específica que permanece desconhecida; não repita alertas genéricos.
-- Para PBIR, leia `definition/pages/pages.json` para preservar a ordem original das páginas, cada `page.json` para obter o nome original, dimensões e filtros de página, e cada `visuals/*/visual.json` para posição, título, consulta, campos, medidas, agregações, filtros e ordenação.
-- Em cada `visual.json`, determine também quais campos alimentam eixos, categorias, séries, legendas, valores e tooltips. Identifique se o visual apresenta total, percentual, participação, composição, tendência, ranking, variação temporal ou comparação entre realizado, válido, meta, limite ou período.
-- Considere também filtros do relatório em `definition/report.json` e medidas de relatório em `definition/reportExtensions.json`, quando existirem.
-- Se o relatório usar PBIR-Legacy, extraia as mesmas informações do `report.json` disponível, sem editar ou converter o formato.
+- Use the PBIP references to locate the report artifact. Do not match directories by similar names when the manifest provides an explicit path.
+- Read `definition.pbir` to determine the semantic model reference.
+- When `datasetReference.byPath` exists, resolve its relative path and look for the corresponding local model.
+- When only `datasetReference.byConnection` exists, or the local path is missing, treat the model as external or unavailable. Add a single short note stating that the calculation logic has not been verified; for each affected indicator, mention only the specific unknown rule rather than repeating general warnings.
+- For PBIR, read `definition/pages/pages.json` to preserve the original page order, each `page.json` for the original name, dimensions, and page filters, and each `visuals/*/visual.json` for position, title, query, fields, measures, aggregations, filters, and sorting.
+- In each `visual.json`, also determine which fields provide axes, categories, series, legends, values, and tooltips. Identify whether the visual represents a total, percentage, share, composition, trend, ranking, time variation, or comparison between actual values, valid values, targets, limits, or periods.
+- Also consider report filters in `definition/report.json` and report-level measures in `definition/reportExtensions.json`, when present.
+- If the report uses PBIR-Legacy, extract the same information from the available `report.json` without editing or converting the format.
 
-### 3. Relacionar visuais ao modelo
+### 3. Map visuals to the model
 
-- Para cada visual funcional, identifique as projeções da consulta e registre internamente as medidas, colunas, hierarquias, agregações, cálculos visuais e filtros usados. Não publique esse inventário no HTML.
-- Ignore formas, imagens, botões, navegadores, caixas de texto e outros elementos puramente decorativos. Preserve textos somente quando forem necessários para entender um indicador ou uma regra de uso.
-- Localize cada medida ou campo no TMDL do modelo, normalmente em arquivos `definition/tables/*.tmdl` e demais arquivos `*.tmdl`. Se o modelo estiver em `model.bim`, consulte a definição JSON equivalente.
-- Para cada medida usada pelo visual, leia a expressão DAX e acompanhe somente as dependências necessárias para entender seu significado.
-- Verifique condições e critérios de cálculo, filtros internos, dependências de outras medidas, tratamento de valores em branco ou zero, contagens distintas, contexto temporal, filtros removidos ou preservados, metas e limites comprovadamente definidos.
-- Diferencie medidas semelhantes antes de redigir, especialmente quantidade versus percentual, visitas realizadas versus visitas válidas, total bruto versus distinto e valor atual versus referência. Não trate nomes parecidos como equivalentes.
-- Para colunas calculadas, grupos de cálculo, parâmetros ou agregações implícitas, consulte a definição correspondente quando ela afetar a leitura do visual.
-- Consulte relacionamentos e direção de filtro somente quando forem indispensáveis para explicar o indicador. Não transforme a documentação em descrição do modelo.
-- Mantenha uma trilha de evidência apenas durante a análise: visual → função no visual → campo ou medida → definição → regra funcional. Não crie um arquivo auxiliar para essa trilha.
-- Classifique internamente cada afirmação como `comprovada pelo PBIR`, `comprovada pelo modelo` ou `necessita validação`. Não exponha essa classificação como inventário; use-a para impedir que hipóteses sejam apresentadas como fatos.
-- Se um visual não puder ser vinculado com segurança ao campo ou à medida, não deduza a lógica pelo título. Sinalize somente a dúvida específica junto ao indicador, por exemplo: `A condição usada neste indicador não pôde ser verificada no modelo disponível.`
+- For each functional visual, identify its query projections and internally record the measures, columns, hierarchies, aggregations, visual calculations, and filters used. Do not publish this inventory in the HTML.
+- Ignore shapes, images, buttons, navigators, text boxes, and other purely decorative elements. Preserve text only when necessary to understand an indicator or usage rule.
+- Locate each measure or field in the model's TMDL, usually in `definition/tables/*.tmdl` and other `*.tmdl` files. For a `model.bim` model, inspect the equivalent JSON definition.
+- For each measure used by the visual, read its DAX expression and follow only the dependencies needed to understand its meaning.
+- Check calculation conditions and criteria, internal filters, measure dependencies, treatment of blank or zero values, distinct counts, temporal context, removed or preserved filters, and explicitly defined targets and limits.
+- Distinguish similar measures before writing, especially quantities versus percentages, completed visits versus valid visits, raw totals versus distinct counts, and current values versus references. Do not treat similar names as equivalent.
+- For calculated columns, calculation groups, parameters, or implicit aggregations, inspect the corresponding definition when it affects interpretation.
+- Examine relationships and filter direction only when essential to explain the indicator. Do not turn the documentation into a model description.
+- Maintain an evidence trail only during analysis: visual → role in the visual → field or measure → definition → functional rule. Do not create an auxiliary file for this trail.
+- Internally classify every claim as `verified in PBIR`, `verified in the model`, or `requires validation`. Do not publish these labels as an inventory; use them to prevent assumptions from being presented as facts.
+- If a visual cannot be reliably linked to its field or measure, do not infer the logic from its title. State only the specific uncertainty beside that indicator, for example: `A condição usada neste indicador não pôde ser verificada no modelo disponível.`
 
-### 4. Relacionar capturas e visuais
+### 4. Match screenshots to visuals
 
-- Use capturas como representação visual, não como fonte primária para explicar a regra de cálculo.
-- Relacione a captura à página usando o nome visível, o `displayName` do `page.json`, a ordem das páginas e a composição dos visuais.
-- Relacione cada gráfico ou card ao `visual.json` por título, posição relativa, campos visíveis, legendas e eixos. Não use apenas semelhança de texto quando houver ambiguidade.
-- Recorte a captura original somente quando os limites do visual forem confiáveis e preserve título, eixos, rótulos e legenda necessários à leitura.
-- Não redesenhe, reconstrua, aprimore ou altere o gráfico. Se o recorte não for seguro, use a captura completa apenas para esse visual.
-- Não inclua uma captura de página inteira quando todos os visuais relevantes daquela página já tiverem imagens individuais.
-- Quando nenhuma captura estiver disponível, mantenha a seção funcional do indicador e omita a imagem sem criar placeholder decorativo.
-- Não instale ferramentas de edição ou conversão para produzir recortes. Se os recursos disponíveis não permitirem um recorte confiável, preserve a captura completa correspondente ou documente o visual sem imagem.
+- Use screenshots as visual representations, not as the primary source for calculation rules.
+- Match the screenshot to the page using the visible name, `page.json.displayName`, page order, and visual composition.
+- Match each chart or card to its `visual.json` using title, relative position, visible fields, legends, and axes. Do not rely only on similar text when the match is ambiguous.
+- Crop the original screenshot only when the visual's boundaries are reliable, preserving the title, axes, labels, and legend needed for interpretation.
+- Do not redraw, reconstruct, enhance, or alter the chart. If a crop is unsafe, use the full screenshot for that visual only.
+- Do not include a full-page screenshot when all relevant visuals on that page already have individual images.
+- When no screenshot is available, retain the indicator's functional documentation and omit the image without creating a decorative placeholder.
+- Do not install editing or conversion tools to create crops. If existing resources cannot produce a reliable crop, retain the corresponding full screenshot or document the visual without an image.
 
-### 5. Redigir e gerar o HTML
+### 5. Write the content and generate HTML
 
-- Aplique obrigatoriamente o **Contrato de geração literal**. Use `assets/semanticdoc_template.html`, resolvido relativamente à pasta deste `SKILL.md`, como arquivo de origem e substitua somente os conteúdos demonstrativos autorizados; nunca redija o documento completo diretamente.
-- Traduza as regras comprovadas no modelo para linguagem de negócio, sem reproduzir DAX, nomes técnicos de tabelas, relacionamentos ou detalhes de implementação.
-- Para cada indicador, apresente sempre as três seções nesta ordem: `Objetivo`, `Como é calculado` e `Como interpretar`. Escreva uma ou duas frases em cada seção; use uma terceira frase no cálculo somente quando necessária para explicar uma condição relevante.
-- Em `Objetivo`, explique a finalidade do indicador para o negócio. Em `Como é calculado`, traduza a lógica comprovada das medidas DAX e dos campos usados pelo visual. Em `Como interpretar`, oriente como compreender e utilizar a leitura nas análises, sem repetir o objetivo nem recontar o cálculo.
-- Em `Como é calculado`, diferencie soma, média, contagem de registros, contagem distinta e percentual; quando houver percentual, explique a parte e a base de comparação. Considere os filtros internos, dependências de medidas, agrupamentos, contexto temporal e tratamento de branco ou zero apenas quando comprovados e relevantes.
-- Para visuais sem agregação, como uma lista de obras, explique a seleção e a organização dos registros conforme a configuração do visual, sem inventar uma operação matemática.
-- Quando não for possível verificar o cálculo, mantenha `Como é calculado` com uma frase específica, como `A regra de contagem não pôde ser verificada no modelo disponível.` Se apenas parte da lógica estiver disponível, explique somente a parte comprovada e indique brevemente o critério ausente; nunca deduza regras pelo título ou pela captura.
-- Não reproduza fórmulas DAX, nomes técnicos de tabelas ou valores momentâneos em nenhuma das três seções. Cada frase deve acrescentar informação específica; não copie o mesmo texto entre seções nem repita uma regra de cálculo em `Regras importantes`.
-- Crie `Regras importantes` somente quando houver uma condição comprovada que altere a leitura ou uma dúvida específica que precise de validação. Use poucos itens curtos e omita a seção quando ela não agregar informação.
-- Organize os indicadores por página, na ordem definida pelo relatório, e agrupe indicadores semelhantes quando isso reduzir repetição e melhorar a leitura.
-- Gere uma aba para cada página usando exatamente seu nome original e configure a primeira página do relatório como aba inicial.
-- Quando houver capturas, incorpore as imagens em Base64 nos componentes de imagem do template; grave somente `documentacao.html`.
-- Antes de concluir, verifique cada explicação contra a trilha de evidência e valide o arquivo offline.
+- Follow the **Literal generation contract**. Use `assets/semanticdoc_template.html`, resolved relative to the directory containing this `SKILL.md`, as the source file, replacing only the authorized demonstration content; never write the complete document from scratch.
+- Translate verified model rules into business language without reproducing DAX, technical table names, relationships, or implementation details.
+- For every indicator, always include these three sections in order: `Objetivo`, `Como é calculado`, and `Como interpretar`. Write one or two sentences per section; use a third calculation sentence only when necessary to explain a relevant condition.
+- In `Objetivo`, explain the indicator's business purpose. In `Como é calculado`, translate the verified logic of the DAX measures and fields used by the visual. In `Como interpretar`, explain how to understand and use the result in analysis without repeating the objective or retelling the calculation.
+- In `Como é calculado`, distinguish sums, averages, record counts, distinct counts, and percentages; for percentages, explain the numerator and the comparison base. Include internal filters, measure dependencies, groupings, temporal context, and treatment of blanks or zeros only when verified and relevant.
+- For unaggregated visuals, such as a list of titles, explain how records are selected and organized according to the visual's configuration without inventing a mathematical operation.
+- When a calculation cannot be verified, keep `Como é calculado` with a specific sentence such as `A regra de contagem não pôde ser verificada no modelo disponível.` When only part of the logic is available, explain only the verified portion and briefly identify the missing criterion; never infer rules from a title or screenshot.
+- Do not reproduce DAX formulas, technical table names, or current chart values in any of the three sections. Every sentence must add specific information; do not copy the same text between sections or repeat a calculation rule in `Regras importantes`.
+- Create `Regras importantes` only for a verified condition that changes interpretation or a specific uncertainty requiring validation. Use a few short items and omit the section when it adds no information.
+- Organize indicators by page in report order, grouping similar indicators when this reduces repetition and improves clarity.
+- Generate one tab per page using its exact original name, and make the report's first page the initial tab.
+- When screenshots exist, embed them in Base64 using the template's image components; write only `documentacao.html`.
+- Before finishing, check every explanation against the evidence trail and validate the file offline.
 
-Se forem necessários arquivos temporários para recortes ou conversão, mantenha-os fora do projeto e remova-os depois que as imagens forem incorporadas. O único artefato final gerado pela execução deve ser `documentacao.html`.
+If temporary files are needed for cropping or conversion, keep them outside the project and remove them after images have been embedded. The only final artifact generated by execution must be `documentacao.html`.
 
-## Regras de interpretação
+## Interpretation rules
 
-- Use linguagem simples, curta, objetiva e adequada a usuários finais.
-- Explique somente regras que mudem a forma correta de interpretar o indicador.
-- Não reproduza valores exibidos, resultados atuais, séries mês a mês ou listas categoria por categoria.
-- Não compare barras, pontos ou períodos e não conclua se o resultado está alto, baixo, melhor ou pior.
-- Não gere análise de desempenho, tendências ou recomendações a partir dos dados exibidos.
-- Não repita o título do indicador como descrição do objetivo.
-- Não use frases vazias como `permite analisar os dados`, `apresenta informações` ou equivalentes. Declare qual decisão, acompanhamento ou compreensão de negócio o indicador apoia.
-- Não explique convenções visuais óbvias, como `barras maiores representam valores maiores`, salvo quando uma escala, sinal, cor ou eixo tiver significado não convencional comprovado.
-- Não crie seções chamadas `Tipo de visual`, `O que apresenta`, `Filtros identificados` ou equivalentes.
-- Não repita explicações genéricas nem a mesma regra em todos os indicadores. Quando uma regra for compartilhada, explique-a uma vez no agrupamento ou na página.
-- Não reproduza DAX, consultas, tabelas, colunas técnicas, relacionamentos ou nomes internos do modelo no documento final.
-- Não invente regras, metas, períodos, unidades, definições ou dependências. Quando a evidência for insuficiente, registre apenas a limitação específica.
-- Não afirme que uma referência é meta sem evidência no PBIR ou no modelo, e não presuma que um resultado maior seja sempre melhor.
-- Não confunda quantidade com percentual, total bruto com contagem distinta, valor realizado com referência ou campos e medidas de nomes semelhantes.
-- Não crie uma seção geral e repetitiva de confirmações. Registre a regra importante ou a dúvida específica perto do indicador somente quando ela evitar uma interpretação incorreta.
-- Ignore visuais puramente decorativos e evite documentar segmentações como indicadores. Considere o efeito de filtros apenas quando ele for essencial à leitura.
-- Não envie arquivos ou dados para serviços externos adicionais. Trabalhe somente com os recursos disponibilizados no ambiente atual.
+- Use simple, short, objective language suitable for end users.
+- Explain only rules that affect the correct interpretation of an indicator.
+- Do not reproduce displayed values, current results, month-by-month narratives, or category-by-category lists.
+- Do not compare bars, points, or periods or conclude that a result is high, low, better, or worse.
+- Do not generate performance analysis, trend conclusions, or recommendations from displayed data.
+- Do not repeat the chart title as the objective's description.
+- Do not use empty phrases such as "allows analysis of the data" or "presents information." State the business decision, monitoring task, or understanding that the indicator supports.
+- Do not explain obvious visual conventions such as "larger bars represent larger values" unless a verified nonstandard meaning applies to a scale, sign, color, or axis.
+- Do not create sections named `Tipo de visual`, `O que apresenta`, `Filtros identificados`, or equivalent headings.
+- Do not repeat generic explanations or the same rule for every indicator. Explain a shared rule once at the relevant group or page level.
+- Do not reproduce DAX, queries, tables, technical columns, relationships, or internal model names in the final document.
+- Do not invent rules, targets, periods, units, definitions, or dependencies. When evidence is insufficient, state only the specific limitation.
+- Do not call a reference a target without evidence in PBIR or the model, and do not assume higher results are always better.
+- Do not confuse quantities with percentages, raw totals with distinct counts, actual values with references, or fields and measures with similar names.
+- Do not create a general, repetitive confirmation section. Place an important rule or specific uncertainty near its indicator only when it prevents a misunderstanding.
+- Ignore purely decorative visuals and avoid documenting slicers as indicators. Discuss filter effects only when essential to interpretation.
+- Do not send files or data to additional external services. Work only with resources available in the current environment.
 
-## Estrutura e apresentação do HTML
+## HTML structure and presentation
 
-Preserve o documento, os componentes e os estilos de `assets/semanticdoc_template.html`, localizado relativamente a este `SKILL.md`. O template já fornece `<!doctype html>`, `<html lang="pt-BR">`, UTF-8, viewport, HTML semântico, CSS interno e JavaScript interno; não substitua esses elementos nem inclua dependências externas.
+Preserve the document, components, and styles in `assets/semanticdoc_template.html`, located relative to this `SKILL.md`. The template already includes `<!doctype html>`, `<html lang="pt-BR">`, UTF-8, viewport metadata, semantic HTML, internal CSS, and internal JavaScript; do not replace these elements or add external dependencies.
 
-### Navegação por abas
+### Tab navigation
 
-- Crie uma barra de abas no topo do documento, antes do conteúdo das páginas.
-- Gere uma aba para cada página documentada, preservando a ordem de `pages.json` ou, no formato legado, a ordem definida no relatório.
-- Use como rótulo da aba o nome original da página em `page.json.displayName`. Não substitua, resuma ou traduza esse nome.
-- Associe cada aba a um único painel de página. O conteúdo de um painel não deve aparecer em outro.
-- Marque a primeira aba como ativa na carga inicial e mostre somente o painel da primeira página.
-- Ao selecionar uma aba, oculte os demais painéis, mostre somente o painel correspondente e atualize o destaque visual.
-- Use botões com `role="tab"` dentro de um contêiner `role="tablist"`; use `aria-selected`, `aria-controls`, `id` e `role="tabpanel"` de forma consistente.
-- Implemente clique e navegação por teclado com Setas esquerda/direita, Home e End. Ao mudar de aba pelo teclado, mova o foco para a aba ativa.
-- Em telas pequenas, mantenha as abas legíveis com rolagem horizontal, quebra controlada ou outro comportamento responsivo que não corte os nomes das páginas.
-- Todo o comportamento deve usar um único `<script>` incorporado, sem bibliotecas e sem acesso à rede.
-- Na impressão, force todos os painéis de página a ficarem visíveis, inclusive os que possuem `hidden`, e mantenha a ordem original. O estado da aba selecionada não pode ocultar conteúdo impresso.
-- Não duplique indicadores, textos ou imagens para implementar a navegação.
+- Create a tab bar at the top of the document, before the page content.
+- Generate one tab per documented page, preserving the order in `pages.json` or the report's order in the legacy format.
+- Use the exact original `page.json.displayName` as each tab label. Do not replace, shorten, or translate it.
+- Associate each tab with exactly one page panel. A panel's content must not appear in another panel.
+- Mark the first tab active on initial load and display only the first page's panel.
+- Selecting a tab must hide the other panels, show only the corresponding panel, and update the active styling.
+- Use buttons with `role="tab"` inside a `role="tablist"` container; use `aria-selected`, `aria-controls`, `id`, and `role="tabpanel"` consistently.
+- Implement click handling and keyboard navigation with Left/Right Arrow, Home, and End. Move focus to the active tab when switching by keyboard.
+- On small screens, keep tab names readable with horizontal scrolling, controlled wrapping, or another responsive behavior that does not cut off page names.
+- Use a single embedded `<script>` for all behavior, with no libraries or network access.
+- When printing, force all page panels to be visible, including panels with `hidden`, and preserve their original order. The selected tab must not hide printed content.
+- Do not duplicate indicators, text, or images to implement navigation.
 
-Organize o conteúdo por página. Em cada painel de aba, inclua uma única vez o nome original e o **Objetivo da página**, descrevendo sua finalidade sem analisar os resultados atuais. Não repita conteúdo entre painéis.
+Organize content by page. In each tab panel, include the original name once and the **Objetivo da página**, describing its purpose without analyzing current results. Do not repeat content between panels.
 
-Para cada visual relevante, gere somente:
+For each relevant visual, generate only:
 
-1. **Nome do indicador**
-2. **Imagem original do gráfico ou card** — somente quando houver captura correspondente
-3. **Objetivo** — uma ou duas frases sobre a informação de negócio representada e sua finalidade
-4. **Como é calculado** — uma ou duas frases sobre a operação, os critérios e filtros comprovados; use uma terceira frase somente quando necessária ou informe brevemente a limitação quando o cálculo não estiver disponível
-5. **Como interpretar** — uma ou duas frases sobre como compreender e utilizar a leitura, sem repetir a finalidade ou a explicação do cálculo
-6. **Regras importantes** — seção opcional com apenas as regras essenciais ou a dúvida específica que necessita validação, sem duplicar as três seções anteriores
+1. **Indicator name**
+2. **Original chart or card image** — only when a matching screenshot exists
+3. **Objetivo** — one or two sentences on the business information represented and its purpose
+4. **Como é calculado** — one or two sentences on the verified operation, criteria, and filters; add a third sentence only when necessary, or briefly state the limitation if the calculation is unavailable
+5. **Como interpretar** — one or two sentences on understanding and using the result, without repeating its purpose or calculation
+6. **Regras importantes** — optional, containing only essential rules or a specific uncertainty requiring validation, without duplicating the previous three sections
 
-Não crie **Regras importantes** quando o conteúdo apenas repetir `Objetivo`, `Como é calculado` ou `Como interpretar`. Quando faltar evidência do cálculo, registre uma frase curta e específica na própria seção `Como é calculado`, sem alertas longos ou genéricos.
+Do not create **Regras importantes** when it merely repeats `Objetivo`, `Como é calculado`, or `Como interpretar`. When calculation evidence is missing, state a short, specific limitation in `Como é calculado` itself, without long or generic warnings.
 
-Requisitos de layout:
+Layout requirements:
 
-- posicione a barra de abas no topo, com contraste claro entre estado normal, foco e `aria-selected="true"`;
-- mantenha a aba ativa visualmente destacada por cor, borda, fundo ou combinação equivalente, sem depender apenas de mudança sutil de tom;
-- use composição compacta, sem painéis de resumo, contadores de páginas, quantidade de visuais ou cards decorativos;
-- adapte cada seção à proporção da imagem e ao tamanho real do texto, evitando alturas fixas e grandes espaços vazios;
-- use largura de 95% da janela, limitada a 1600px, alinhando cabeçalho, conteúdo e rodapé com margens laterais reduzidas;
-- use uma única coluna de indicadores em `visual-grid`, separados por 14px; nunca coloque dois indicadores lado a lado;
-- mantenha o nome no topo de cada card e, abaixo, `visual-content` com imagem à esquerda em aproximadamente 35% e descrição à direita em aproximadamente 65%; não mova a descrição para baixo da imagem no desktop;
-- mantenha duas colunas em tablets acima de 640px e empilhe imagem e descrição em telas de até 640px;
-- preserve a proporção original com `width: auto`, `height: auto`, `max-width: 100%`, `max-height: 220px` e `object-fit: contain`; não aplique cortes, altura fixa ou ampliação obrigatória às imagens;
-- use `visual-content no-image` para texto em largura completa quando não houver captura, sem coluna vazia;
-- agrupe visuais semelhantes sob um título comum quando isso reduzir repetição;
-- não inclua a captura inteira da página como introdução se os gráficos já estiverem recortados e presentes;
-- use `@media print` para preservar contraste, evitar cortes dentro de um indicador e remover efeitos desnecessários;
-- inclua em `@media print` uma regra equivalente a `[role="tabpanel"][hidden] { display: block !important; }` para imprimir todas as páginas, independentemente da aba ativa.
+- position the tab bar at the top, with clear contrast between the normal, focused, and `aria-selected="true"` states;
+- distinguish the active tab through color, border, background, or an equivalent combination rather than a subtle shade change alone;
+- keep the composition compact, without summary panels, page counters, visual counts, or decorative cards;
+- adapt each section to the image's proportions and actual text length, avoiding fixed heights and large empty areas;
+- use 95% of the window width, capped at 1600px, aligning header, content, and footer with narrow side margins;
+- use a single column of indicators in `visual-grid`, with 14px spacing; never place two indicators side by side;
+- keep each card's name at the top, followed by `visual-content` with the image on the left at approximately 35% and the description on the right at approximately 65%; do not move the description below the image on desktop;
+- retain two columns on tablets wider than 640px and stack the image above the description on screens up to 640px wide;
+- preserve image proportions with `width: auto`, `height: auto`, `max-width: 100%`, `max-height: 220px`, and `object-fit: contain`; do not crop, set fixed heights, or force image enlargement for layout purposes;
+- use `visual-content no-image` for full-width text when no screenshot is available, without an empty image column;
+- group similar visuals under a shared title when that reduces repetition;
+- do not include an entire page screenshot as an introduction when its cropped charts are already present;
+- use `@media print` to preserve contrast, avoid splitting an indicator, and remove unnecessary effects;
+- include a `@media print` rule equivalent to `[role="tabpanel"][hidden] { display: block !important; }` to print every page regardless of the active tab.
 
-Incorpore cada imagem utilizada como Data URL Base64. É permitido incorporar a captura original uma vez em um elemento SVG interno e apresentar recortes fiéis com `viewBox` e referências internas, desde que o arquivo permaneça autossuficiente e nenhum gráfico seja recriado.
+Embed every image used as a Base64 Data URL. It is permissible to embed an original screenshot once in an internal SVG element and display faithful crops using `viewBox` and internal references, provided the file remains self-contained and no chart is recreated.
 
-## Validação antes da entrega
+## Validation before delivery
 
-- Confirme que existe somente um artefato novo ou atualizado: `documentacao.html`.
-- Antes de gravar o arquivo, confirme que o candidato foi obtido somente pelas substituições demonstrativas permitidas.
-- Compare o bloco `<style>` do candidato com o bloco do template e exija igualdade exata, caractere por caractere.
-- Compare o bloco `<script>` do candidato com o bloco do template e exija igualdade exata, caractere por caractere.
-- Confirme que existe exatamente um `<style>`, exatamente um `<script>`, nenhum atributo `style` e nenhuma classe fora do contrato do template.
-- Confirme que o cabeçalho, a barra de abas, o contêiner principal e suas posições relativas permanecem iguais aos do template.
-- Confirme que `<title>` e `<h1>` permanecem fixos, o subtítulo identifica o relatório e qualquer logo presente usa Base64 sem criar espaço vazio quando ausente.
-- Confirme que cada `article.visual` contém exatamente um `visual-head` seguido de um `visual-content`, com `visual-image` antes de `visual-body` quando houver imagem. Sem imagem, exija `visual-content no-image` com somente `visual-body`.
-- Confirme que todos os cards ocupam a largura completa; em 1440px e 768px, imagem e descrição devem ficar lado a lado, com a imagem limitada a 220px. Em 390px, a imagem deve ficar acima da descrição sem rolagem horizontal do documento.
-- Verifique que a largura do documento é `min(95% da janela, 1600px)`, o espaçamento entre cards está entre 12px e 16px e a proporção renderizada das imagens coincide com a original.
-- Valide também um indicador sem imagem, conferindo que o texto ocupa toda a largura, e a impressão, conferindo que todas as páginas ocultas aparecem. O script auxiliar valida o contrato estrutural; quando houver navegador disponível, verifique também as dimensões renderizadas.
-- Se qualquer validação do template falhar, descarte o candidato e preserve o `documentacao.html` existente. Não tente corrigir o layout por aproximação.
-- Quando houver imagens, confirme que toda imagem utilizada está incorporada em Base64 válido e que nenhum recorte distorce sua proporção.
-- Procure e remova referências `http://`, `https://`, `file://`, caminhos absolutos, `<link>`, `@import` e qualquer `<script src="...">`. Mantenha somente o script incorporado necessário às abas.
-- Confirme que a quantidade de abas corresponde à quantidade de páginas documentadas, os nomes e a ordem coincidem com o relatório e a primeira aba inicia ativa.
-- Teste o clique e o teclado, verificando que somente um painel fica visível na tela e que `aria-selected`, `tabindex` e `hidden` são atualizados corretamente.
-- Teste a visualização em largura reduzida e confirme que todos os nomes de página continuam acessíveis.
-- Confirme pela folha de impressão ou por inspeção do CSS que todos os painéis são exibidos em `@media print`, mesmo quando ocultos na tela.
-- Confirme que cada visual documentado está na página correta e possui nome, as seções `Objetivo`, `Como é calculado` e `Como interpretar`, exatamente uma vez nessa ordem, e imagem quando houver captura correspondente.
-- Quando não houver captura, confirme que o indicador continua compreensível, que `visual-image` foi omitido e que `image-placeholder` não aparece no documento.
-- Confirme que cada regra funcional pode ser rastreada ao PBIR e ao modelo; quando não puder, registre a limitação sem completar a lógica por suposição.
-- Confirme que cada `Objetivo` e `Como interpretar` contêm uma ou duas frases específicas e distintas. Exija uma explicação curta de cálculo em `Como é calculado`, com filtros e dependências relevantes comprovados ou uma limitação explícita quando indisponível.
-- Revise separadamente soma, média, percentual, contagem e contagem distinta na seção `Como é calculado`. Confirme que nenhuma delas foi inferida apenas pelo nome do visual, que o percentual identifica a base de comparação e que nenhuma fórmula DAX ou explicação duplicada foi publicada.
-- Confirme que `Regras importantes` aparece somente quando necessária e contém apenas condições essenciais ou dúvidas específicas.
-- Remova valores atuais, comparações de resultados, análises de desempenho, explicações óbvias, frases genéricas, inventários técnicos, DAX e seções não permitidas.
-- Revise separadamente quantidade versus percentual, total bruto versus distinto, realizado versus referência e referência versus meta para impedir equivalências não comprovadas.
-- Confirme que arquivos PBIP, PBIR, TMDL, `model.bim` e imagens originais permaneceram inalterados.
-- Abra o HTML localmente, quando o ambiente permitir, e verifique se texto, imagens, responsividade e impressão continuam legíveis sem acesso à rede.
+- Confirm that `documentacao.html` is the only new or updated execution artifact.
+- Before writing the file, confirm that the candidate was produced only by the permitted demonstration-content substitutions.
+- Compare the candidate's `<style>` block with the template's block and require exact character-for-character equality.
+- Compare the candidate's `<script>` block with the template's block and require exact character-for-character equality.
+- Confirm there is exactly one `<style>`, exactly one `<script>`, no `style` attributes, and no classes outside the template contract.
+- Confirm the header, tab bar, main container, and their relative positions remain the same as in the template.
+- Confirm that `<title>` and `<h1>` remain fixed, the subtitle identifies the report, and any logo is Base64 with no reserved empty space when absent.
+- Confirm each `article.visual` contains exactly one `visual-head` followed by one `visual-content`, with `visual-image` before `visual-body` when an image exists. Without an image, require `visual-content no-image` containing only `visual-body`.
+- Confirm every card uses the full width; at 1440px and 768px, the image and description must sit side by side, with image height capped at 220px. At 390px, the image must appear above the description with no horizontal document scrolling.
+- Check that document width is `min(95% of the window, 1600px)`, card spacing is between 12px and 16px, and rendered image proportions match the originals.
+- Also validate an indicator without an image, checking full-width text, and printing, checking that all hidden pages become visible. The helper script validates the structural contract; when a browser is available, also check rendered dimensions.
+- If any template validation fails, discard the candidate and preserve the existing `documentacao.html`. Do not approximate the layout as a repair.
+- When images exist, confirm each used image is valid embedded Base64 and no crop distorts its proportions.
+- Find and remove `http://`, `https://`, `file://`, absolute paths, `<link>`, `@import`, and any `<script src="...">` references. Retain only the embedded script needed for tabs.
+- Confirm the number of tabs equals the number of documented pages, names and order match the report, and the first tab is initially active.
+- Test clicking and keyboard navigation, checking that only one screen panel is visible and `aria-selected`, `tabindex`, and `hidden` update correctly.
+- Test a narrow viewport and confirm every page name remains accessible.
+- Confirm through the print stylesheet or CSS inspection that all panels appear in `@media print`, even when hidden on screen.
+- Confirm every documented visual is on the correct page and has a name, `Objetivo`, `Como é calculado`, and `Como interpretar` exactly once in that order, plus an image whenever a matching screenshot exists.
+- Without a screenshot, confirm the indicator remains understandable, `visual-image` is omitted, and `image-placeholder` does not appear.
+- Confirm every functional rule is traceable to PBIR and the model; where it is not, state the limitation without inventing missing logic.
+- Confirm each `Objetivo` and `Como interpretar` contains one or two specific, distinct sentences. Require a short explanation in `Como é calculado`, including verified relevant filters and dependencies or an explicit limitation when unavailable.
+- Separately review sums, averages, percentages, counts, and distinct counts in `Como é calculado`. Confirm none was inferred solely from the visual's name, percentages identify their comparison base, and no DAX formula or duplicate explanation is published.
+- Confirm `Regras importantes` appears only when necessary and contains only essential conditions or specific uncertainties.
+- Remove current values, result comparisons, performance analysis, obvious explanations, generic phrases, technical inventories, DAX, and prohibited sections.
+- Separately review quantity versus percentage, raw totals versus distinct counts, actual values versus references, and references versus targets to prevent unsupported equivalences.
+- Confirm PBIP, PBIR, TMDL, `model.bim`, and original image files remain unchanged.
+- Open the HTML locally when the environment allows and check that text, images, responsiveness, and printing remain readable without network access.
 
-## Limites de escopo
+## Scope limits
 
-Esta Skill não modifica o relatório, o modelo semântico ou as capturas; não cria DAX, não publica no Fabric ou no Power BI Service, não chama APIs, não exige autenticação e não gera PDF. Ela produz somente um manual HTML autossuficiente com interação local por abas. A ausência do modelo local limita a comprovação das regras e deve ser informada no documento.
+This Skill does not modify the report, semantic model, or screenshots; create DAX; publish to Fabric or Power BI Service; call APIs; require authentication; or generate PDFs. It produces only a self-contained HTML manual with local tab navigation. An unavailable local model limits verification of calculation rules and must be disclosed in the document.
 
-## Instrução permanente
+## Permanent instruction
 
-Quando o arquivo documentacao.html já existir, ignorar seu HTML durante a montagem e reconstruí-lo exclusivamente a partir de `assets/semanticdoc_template.html`, resolvido relativamente à pasta deste `SKILL.md`. O arquivo anterior não pode ser usado como fonte visual, estrutural ou de regras de negócio.
+When `documentacao.html` already exists, ignore its HTML during assembly and rebuild exclusively from `assets/semanticdoc_template.html`, resolved relative to the directory containing this `SKILL.md`. The previous file must not be used as a visual, structural, or business-rule source.
