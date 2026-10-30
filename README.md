@@ -8,6 +8,8 @@ O objetivo é facilitar a compreensão dos indicadores pelos usuários de negóc
 
 O resultado é um único arquivo `documentacao.html`, com navegação por páginas, explicações em linguagem de negócio e imagens dos visuais, quando houver capturas disponíveis.
 
+Veja o [exemplo com o painel Netflix](example/README.md), com o link do Power BI, capturas das páginas e o HTML gerado.
+
 ## Objetivo do projeto
 
 O SemanticDoc AI foi criado para **preservar e compartilhar o conhecimento de negócio presente nos relatórios Power BI**.
@@ -82,6 +84,8 @@ A numeração dos arquivos é apenas uma referência. A Skill procura relacionar
 As imagens são opcionais. Na ausência de capturas, os indicadores continuam documentados normalmente, sem espaços reservados para gráficos.
 
 ### 2. Execute a Skill
+
+Não é necessário manter o projeto aberto no Power BI Desktop durante a execução.
 
 No Codex, digite:
 
