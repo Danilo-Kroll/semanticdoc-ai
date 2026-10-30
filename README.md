@@ -1,8 +1,9 @@
 # semanticdoc-ai
 
-Skill local do Codex para descobrir um projeto Power BI PBIP, interpretar suas páginas e seus visuais com apoio do modelo semântico e gerar um manual funcional em português brasileiro.
+Skill local do Codex para documentar um projeto Power BI para a área de negócio.
+Interpreta o arquivo PBIP e prints dos visuais e gerar um manual funcional em português brasileiro.
 
-O resultado é um único `documentacao.html` autossuficiente, com navegação por abas e imagens Base64 quando existirem capturas reais.
+O resultado é um único `documentacao.html`, com navegação por abas e imagens quando existirem capturas reais.
 
 ## Requisitos
 
@@ -13,7 +14,7 @@ Não é necessário instalar Python, Node.js, bibliotecas, Microsoft Fabric, Pow
 
 ## Instalação no projeto
 
-Copie somente a pasta completa `semanticdoc-ai` para `.agents/skills`. O template canônico já acompanha a Skill em `assets/`, portanto não precisa ser instalado ou configurado separadamente:
+Copie somente a pasta completa `semanticdoc-ai` para `.agents/skills` ou clone esse repositório para o seu projeto. O template já acompanha a Skill em `assets/`, portanto não precisa ser instalado ou configurado separadamente:
 
 ```text
 seu-projeto/
@@ -37,17 +38,17 @@ A Skill resolve `assets/semanticdoc_template.html` relativamente ao próprio `SK
 
 A pasta `scripts/` inclui `render_documentation.cjs`, um montador e validador opcional para ambientes que já tenham Node.js. Copie a pasta completa da Skill; a execução básica continua sem exigir instalação adicional.
 
-Para verificar o montador em um ambiente com Node.js, execute `node .agents/skills/semanticdoc-ai/scripts/render_documentation.test.cjs` na raiz do projeto.
-
 ## Uso
 
-Abra a raiz do projeto como diretório de trabalho e execute:
+Na pasta 'img' guarde o print de cada aba do Power BI (Na ausência de capturas, os visuais continuam documentados sem imagem e sem espaços vazios. A quantidade e a numeração dos arquivos não determinam a página: a correspondência é validada pelo PBIR, pelos títulos e pela disposição dos visuais. A Skill nunca cria gráficos fictícios, A renomeação dos prints apenas ajuda a Skill a ser mais eficiente).
+
+Abra a raiz do projeto como diretório de trabalho no Codex e execute:
 
 ```text
 $semanticdoc-ai
 ```
 
-Nenhum prompt adicional é necessário quando existe um único PBIP. A Skill:
+Nenhum prompt adicional é necessário e não precisa deixar o Power BI aberto. A Skill:
 
 1. localiza o PBIP;
 2. segue suas referências para o relatório PBIR e o modelo semântico;
@@ -70,20 +71,18 @@ O manual contém:
 - objetivo resumido de cada página;
 - nome e três seções obrigatórias para cada visual funcional: Objetivo, Como é calculado e Como interpretar;
 - regras importantes somente quando comprovadas ou necessárias para evitar leitura incorreta;
-- imagens originais em Base64 quando houver correspondência segura com o visual.
+- imagens originais quando houver correspondência segura com o visual.
 
-Cada indicador ocupa uma linha completa, com título no topo, imagem à esquerda (35%) e texto à direita (65%). O documento usa 95% da janela até 1600px, e as imagens preservam a proporção com altura máxima de 220px. No celular, a imagem fica acima do texto; sem captura, o texto ocupa toda a largura. O título do manual é fixo, o subtítulo identifica o relatório e o logo é opcional. A impressão inclui todas as páginas.
+Cada indicador ocupa uma linha completa, com título no topo, imagem à esquerda e texto à direita. Para o celular a página é ajustada.
 
 Em “Como é calculado”, a Skill explica a lógica comprovada das medidas e dos campos em linguagem simples, incluindo filtros e dependências relevantes. Diferencia soma, média, percentual, contagem e contagem distinta, sem publicar DAX. Se o cálculo não puder ser verificado, registra uma limitação breve nessa seção. No montador, essa explicação deve ser informada pelo campo obrigatório `calculation` de cada visual.
-
-Na ausência de capturas, os visuais continuam documentados sem imagem e sem espaços vazios. A quantidade e a numeração dos arquivos não determinam a página: a correspondência é validada pelo PBIR, pelos títulos e pela disposição dos visuais. A Skill nunca cria gráficos fictícios.
 
 ## Fontes analisadas
 
 - PBIP para descoberta dos artefatos;
 - PBIR atual ou `report.json` legado para páginas, visuais, campos, filtros e configurações;
 - TMDL ou `model.bim` para medidas, dependências e regras de cálculo;
-- capturas fornecidas pelo usuário ou armazenadas no projeto.
+- capturas fornecidas pelo usuário na pasta 'img' (não obrigatória).
 
 Quando o modelo semântico é externo ou não está disponível, a documentação identifica apenas as regras específicas que não puderam ser verificadas.
 
