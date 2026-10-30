@@ -27,6 +27,7 @@ seu-projeto/
 │               ├── render_documentation.cjs
 │               └── render_documentation.test.cjs
 ├── README.md
+├── img/
 ├── seu-relatorio.pbip
 ├── pasta-do-relatorio/
 └── pasta-do-modelo/
@@ -52,7 +53,7 @@ Nenhum prompt adicional é necessário quando existe um único PBIP. A Skill:
 2. segue suas referências para o relatório PBIR e o modelo semântico;
 3. preserva a ordem e os nomes originais das páginas;
 4. relaciona visuais, medidas, campos, filtros e regras de cálculo;
-5. procura capturas reais primeiro em `imagens/`, `images/`, `screenshots/` e `capturas/`, sem exigir que essas pastas existam;
+5. procura capturas reais primeiro em `img/`, `images/`, `screenshots/` e `capturas/`, sem exigir que essas pastas existam;
 6. gera `documentacao.html` ao lado do PBIP.
 
 Se houver vários arquivos PBIP, a Skill lista somente seus caminhos relativos e solicita a escolha. Também é possível selecionar diretamente um projeto:
