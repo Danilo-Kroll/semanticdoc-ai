@@ -1,20 +1,25 @@
-# semanticdoc-ai
+# SemanticDoc AI
 
-Skill local do Codex para documentar um projeto Power BI para a área de negócio.
-Interpreta o arquivo PBIP e prints dos visuais e gerar um manual funcional em português brasileiro.
+**Geração automatizada de documentação orientada ao negócio para relatórios Power BI utilizando Codex Skills.**
 
-O resultado é um único `documentacao.html`, com navegação por abas e imagens quando existirem capturas reais.
+O SemanticDoc AI é uma Skill para o Codex que interpreta projetos Power BI, analisa a estrutura dos visuais e as regras de cálculo e gera um manual funcional em português brasileiro.
+
+O objetivo é facilitar a compreensão dos indicadores por usuários de negócio, sem exigir conhecimento técnico de DAX ou do modelo de dados.
+
+O resultado é um único arquivo `documentacao.html`, com navegação por páginas, explicações e imagens dos visuais quando houver capturas disponíveis.
 
 ## Requisitos
 
-- Um projeto Power BI em formato PBIP, com o arquivo `*.pbip` e os artefatos por ele referenciados.
 - Codex com suporte a Skills locais.
+- Projeto Power BI em formato PBIP, incluindo o arquivo `.pbip` e os artefatos referenciados.
 
-Não é necessário instalar Python, Node.js, bibliotecas, Microsoft Fabric, Power BI Service, gateways ou ferramentas pagas. A análise usa somente os arquivos locais já disponíveis.
+A execução básica não exige a instalação de Python, Node.js, bibliotecas adicionais, Power BI Desktop, Microsoft Fabric, Power BI Service ou ferramentas pagas.
 
-## Instalação no projeto
+## Instalação
 
-Copie somente a pasta completa `semanticdoc-ai` para `.agents/skills` ou clone esse repositório para o seu projeto. O template já acompanha a Skill em `assets/`, portanto não precisa ser instalado ou configurado separadamente:
+Copie a pasta completa `semanticdoc-ai` para o diretório `.agents/skills/` do seu projeto.
+
+A estrutura esperada é:
 
 ```text
 seu-projeto/
@@ -27,70 +32,142 @@ seu-projeto/
 │           └── scripts/
 │               ├── render_documentation.cjs
 │               └── render_documentation.test.cjs
-├── README.md
 ├── img/
 ├── seu-relatorio.pbip
 ├── pasta-do-relatorio/
 └── pasta-do-modelo/
 ```
 
-A Skill resolve `assets/semanticdoc_template.html` relativamente ao próprio `SKILL.md`. Nenhum caminho absoluto ou configuração na raiz do projeto é necessário.
+O template HTML `assets/` acompanha a Skill, não houvendo a necessidade de configurar caminhos absolutos. Fique a vontade para alterar o layout!
 
-A pasta `scripts/` inclui `render_documentation.cjs`, um montador e validador opcional para ambientes que já tenham Node.js. Copie a pasta completa da Skill; a execução básica continua sem exigir instalação adicional.
+A pasta `scripts/` contém um montador e validador opcional para ambientes que já possuem Node.js. Sua utilização não é obrigatória para a execução básica.
 
-## Uso
+## Como utilizar
 
-Na pasta 'img' guarde o print de cada aba do Power BI (Na ausência de capturas, os visuais continuam documentados sem imagem e sem espaços vazios. A quantidade e a numeração dos arquivos não determinam a página: a correspondência é validada pelo PBIR, pelos títulos e pela disposição dos visuais. A Skill nunca cria gráficos fictícios, A renomeação dos prints apenas ajuda a Skill a ser mais eficiente).
+### 1. Prepare o projeto
 
-Abra a raiz do projeto como diretório de trabalho no Codex e execute:
+Abra no Codex a pasta que contém seu projeto Power BI (`.pbip`).
+
+Opcionalmente, na pasta `img/` capture as páginas ou dos visuais do relatório.
+
+Exemplo:
+
+```text
+img/
+├── logo.png
+├── 01.png
+├── 02.png
+└── 03.png
+```
+
+- `logo.png`: identidade visual opcional para o cabeçalho.
+- `01.png`, `02.png`, `03.png`: capturas utilizadas na documentação.
+
+A numeração é apenas uma referência. A Skill procura relacionar as imagens às páginas e aos visuais utilizando a estrutura do PBIR, os títulos e a disposição dos elementos.
+
+As imagens são opcionais. Na ausência de capturas, os indicadores continuam documentados normalmente, sem espaços reservados para gráficos.
+
+### 2. Execute a Skill
+
+No Codex, digite:
 
 ```text
 $semanticdoc-ai
 ```
 
-Nenhum prompt adicional é necessário e não precisa deixar o Power BI aberto. A Skill:
+Nenhum prompt adicional é necessário.
 
-1. localiza o PBIP;
-2. segue suas referências para o relatório PBIR e o modelo semântico;
-3. preserva a ordem e os nomes originais das páginas;
-4. relaciona visuais, medidas, campos, filtros e regras de cálculo;
-5. procura capturas reais primeiro em `img/`, `images/`, `screenshots/` e `capturas/`, sem exigir que essas pastas existam;
-6. gera `documentacao.html` ao lado do PBIP.
+A Skill identifica automaticamente o projeto, analisa seus componentes e gera a documentação.
 
-Se houver vários arquivos PBIP, a Skill lista somente seus caminhos relativos e solicita a escolha. Também é possível selecionar diretamente um projeto:
+Também é possível informar diretamente o arquivo PBIP:
 
 ```text
 $semanticdoc-ai ./caminho/para/arquivo.pbip
 ```
 
-## Conteúdo gerado
+Caso existam vários projetos PBIP no diretório, a Skill solicita a seleção de um deles.
 
-O manual contém:
+### 3. Acesse a documentação
 
-- uma aba por página do relatório;
-- objetivo resumido de cada página;
-- nome e três seções obrigatórias para cada visual funcional: Objetivo, Como é calculado e Como interpretar;
-- regras importantes somente quando comprovadas ou necessárias para evitar leitura incorreta;
-- imagens originais quando houver correspondência segura com o visual.
+Após a execução, será criado o arquivo:
 
-Cada indicador ocupa uma linha completa, com título no topo, imagem à esquerda e texto à direita. Para o celular a página é ajustada.
+```text
+documentacao.html
+```
 
-Em “Como é calculado”, a Skill explica a lógica comprovada das medidas e dos campos em linguagem simples, incluindo filtros e dependências relevantes. Diferencia soma, média, percentual, contagem e contagem distinta, sem publicar DAX. Se o cálculo não puder ser verificado, registra uma limitação breve nessa seção. No montador, essa explicação deve ser informada pelo campo obrigatório `calculation` de cada visual.
+O arquivo é gerado ao lado do PBIP selecionado e pode ser aberto diretamente no navegador, sem conexão com serviços externos para exibição.
+
+## Conteúdo da documentação
+
+O SemanticDoc AI gera um manual organizado por páginas, preservando os nomes e a ordem original do relatório Power BI.
+
+Cada indicador contém três seções principais:
+
+**Objetivo**
+
+Explica a finalidade do indicador e qual informação de negócio ele representa.
+
+**Como é calculado**
+
+Traduz as regras de cálculo identificadas no modelo semântico para uma linguagem simples, considerando agregações, filtros e dependências relevantes.
+
+A documentação distingue operações como soma, média, percentual, contagem e contagem distinta, sem reproduzir as fórmulas DAX.
+
+**Como interpretar**
+
+Orienta o usuário sobre o significado do indicador e os cuidados necessários para interpretar corretamente seus resultados.
+
+Quando necessário, também são apresentadas regras importantes ou limitações específicas que não puderam ser verificadas.
+
+### Apresentação visual
+
+O manual utiliza um layout responsivo, com:
+
+- Uma aba para cada página do relatório.
+- Imagens originais dos gráficos à esquerda e descrições à direita em telas maiores.
+- Adaptação automática para dispositivos móveis.
+- Título padronizado e identificação dinâmica do relatório.
+- Logotipo opcional.
+- Imagens incorporadas em Base64.
+- CSS e JavaScript internos, sem dependências externas para visualização.
 
 ## Fontes analisadas
 
-- PBIP para descoberta dos artefatos;
-- PBIR atual ou `report.json` legado para páginas, visuais, campos, filtros e configurações;
-- TMDL ou `model.bim` para medidas, dependências e regras de cálculo;
-- capturas fornecidas pelo usuário na pasta 'img' (não obrigatória).
+O SemanticDoc AI utiliza os seguintes artefatos:
 
-Quando o modelo semântico é externo ou não está disponível, a documentação identifica apenas as regras específicas que não puderam ser verificadas.
+| Fonte | Finalidade |
+|---|---|
+| PBIP | Identificação e descoberta do projeto Power BI. |
+| PBIR ou `report.json` | Páginas, visuais, campos, filtros e configurações. |
+| TMDL ou `model.bim` | Medidas, dependências e regras de cálculo. |
+| Capturas de tela | Representação visual dos indicadores no manual. |
 
-## Segurança e limites
+Quando o modelo semântico está ausente ou utiliza uma conexão externa, a Skill informa as limitações específicas de interpretação, sem inventar regras de negócio.
 
-- O PBIP, o relatório, o modelo e as imagens originais não são alterados.
-- Nenhum dado é enviado a serviços externos.
-- Não são usados Power BI Service, Microsoft Fabric, APIs ou tokens.
-- Valores momentâneos e análises dos resultados atuais não são reproduzidos.
-- Regras de negócio sem evidência no projeto não são inventadas.
-- O único arquivo de saída é `documentacao.html`.
+## Segurança e limitações
+
+- Não altera os arquivos originais do Power BI.
+- Não modifica as capturas fornecidas pelo usuário.
+- Não publica relatórios no Power BI Service ou Microsoft Fabric.
+- Não utiliza APIs externas adicionais ou tokens próprios.
+- Não reproduz valores momentâneos nem realiza análises de desempenho.
+- Não inventa regras de cálculo sem evidência nos arquivos disponíveis.
+- Não exige que o Power BI Desktop esteja aberto.
+- Gera somente um arquivo final: `documentacao.html`.
+
+**Privacidade:** a Skill não implementa envio próprio de dados para serviços externos. O processamento realizado pelo Codex segue as configurações de privacidade e segurança do ambiente em que ele é utilizado.
+
+## Tecnologias
+
+- Codex Skills
+- Power BI Project (PBIP)
+- Power BI Enhanced Report Format (PBIR)
+- Tabular Model Definition Language (TMDL)
+- DAX
+- HTML, CSS e JavaScript
+
+## Objetivo do projeto
+
+O SemanticDoc AI busca aproximar a documentação técnica dos relatórios Power BI das necessidades dos usuários de negócio.
+
+Em vez de apresentar fórmulas e estruturas internas, transforma as definições disponíveis no projeto em explicações funcionais, facilitando a compreensão e a utilização dos indicadores.
